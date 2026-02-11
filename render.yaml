@@ -1,6 +1,20 @@
 services:
   - type: web
     name: fileduck-api
+    env: node
+    branch: main
+    region: oregon
+    plan: free
+    root: apps/api
+    buildCommand: pnpm install && pnpm --filter @fileduck/api build
+    startCommand: pnpm --filter @fileduck/api start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true
+services:
+  - type: web
+    name: fileduck-api
     serviceId: srv-d65u1s3nv86c73dvsi20
     runtime: docker
     plan: standard

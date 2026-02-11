@@ -49,5 +49,6 @@ coverage
 .prettierrc*
 docker-compose.yml
 railway.json
+render.yaml
 fly.toml
 vercel.json
