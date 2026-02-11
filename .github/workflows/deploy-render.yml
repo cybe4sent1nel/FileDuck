@@ -26,7 +26,7 @@ jobs:
             -d '{}')
           echo "HTTP Status: $HTTP_STATUS"
           cat response.json
-          if [ "$HTTP_STATUS" -ne 201 ]; then
+          if [ "$HTTP_STATUS" -ne 201 ] && [ "$HTTP_STATUS" -ne 202 ]; then
             echo "Deploy trigger failed with status $HTTP_STATUS"
             exit 1
           fi
