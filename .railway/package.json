@@ -1,0 +1,11 @@
+{
+  "name": "fileduck-railway-deploy",
+  "scripts": {
+    "deploy": "railway up",
+    "logs": "railway logs",
+    "status": "railway status",
+    "domain": "railway domain",
+    "vars": "railway variables",
+    "open": "railway open"
+  }
+}

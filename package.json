@@ -1,0 +1,45 @@
+{
+  "name": "fileduck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Global file sharing with CDN, malware scanning, and privacy",
+  "scripts": {
+    "start": "node scripts/check-docker.js && pnpm run dev",
+    "dev": "turbo run dev",
+    "dev:api": "pnpm --filter @fileduck/api dev",
+    "dev:web": "pnpm --filter @fileduck/vue-app dev",
+    "build": "turbo run build",
+    "build:backend": "pnpm --filter @fileduck/scanner build && pnpm --filter @fileduck/api build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,vue,json,md}\"",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:clean": "docker-compose down -v",
+    "docker:check": "node scripts/check-docker.js",
+    "render:dashboard": "start https://dashboard.render.com/services/srv-d65u1s3nv86c73dvsi20",
+    "setup": "pnpm install",
+    "stop": "pnpm run docker:down"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "turbo": "^1.11.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.12.1"
+}

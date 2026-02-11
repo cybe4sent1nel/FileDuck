@@ -1,0 +1,48 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "apps/vue-app/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/sw.js",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Service-Worker-Allowed": "/"
+      },
+      "dest": "/sw.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/offline",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      },
+      "dest": "/index.html"
+    },
+    {
+      "src": "/error",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      },
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block"
+      },
+      "dest": "/index.html"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# Exclude frontend from Railway deployment
+apps/vue-app
+apps/vue-app/**
+
+# Exclude unnecessary files
+node_modules
+.git
+.github
+*.log
+.env.local
+.env.*.local
+*.md
+!README.md
+animations
+trusted
+scripts

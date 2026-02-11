@@ -1,0 +1,63 @@
+services:
+  - type: web
+    name: fileduck-api
+    serviceId: srv-d65u1s3nv86c73dvsi20
+    runtime: docker
+    plan: standard
+    region: oregon
+    buildCommand: ''
+    startCommand: node dist/server.js
+    healthCheckPath: /api/health
+    healthCheckTimeout: 30
+    restartPolicy: on_failure
+    maxRetries: 3
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
+      - key: UPSTASH_REDIS_URL
+        sync: false
+      - key: UPSTASH_REDIS_TOKEN
+        sync: false
+      - key: AWS_REGION
+        value: us-east-1
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_ENDPOINT
+        sync: false
+      - key: S3_BUCKET_QUARANTINE
+        value: fileduck-quarantine
+      - key: S3_BUCKET_PUBLIC
+        value: fileduck-public
+      - key: CLAMAV_HOST
+        value: localhost
+      - key: CLAMAV_PORT
+        value: 3310
+      - key: VIRUSTOTAL_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CAPTCHA_SITE_KEY
+        sync: false
+      - key: CAPTCHA_SECRET_KEY
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 60000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 10
+      - key: SCANNER_PORT
+        value: 4000
+      - key: SCANNER_URL
+        value: http://localhost:4000
+      - key: USE_CDN
+        value: false
+      - key: VITE_API_URL
+        value: /api
+    dockerfile: ./apps/api/Dockerfile
+    dockerContext: ./
+    autoDeploy: true
+    branch: main
+    preDeployCommand: ''

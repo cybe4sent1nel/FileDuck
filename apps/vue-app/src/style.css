@@ -1,0 +1,409 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #c084fc;
+  --color-primary-dark: #a855f7;
+  --color-secondary: #f2e68c;
+  --color-secondary-dark: #efd775;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f2e68c;
+  --color-cream: #fffaed;
+}
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0f0c15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulance type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  color: #fffef7;
+  cursor: url('/cursor-arrow.svg') 8 8, auto;
+  overflow-y: overlay; /* Use overlay scrollbar */
+}
+
+/* Default arrow cursor for all elements */
+* {
+  cursor: url('/cursor-arrow.svg') 8 8, auto;
+}
+
+/* Hand pointer cursor for clickable elements - HIGHEST PRIORITY */
+a, button, [role="button"], [type="button"], [type="submit"], [type="reset"],
+select, .cursor-pointer, label[for], summary, [onclick], .clickable,
+input[type="checkbox"], input[type="radio"], input[type="file"],
+.router-link-active, .router-link-exact-active, a[href] {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure all child elements inside buttons and links inherit pointer cursor */
+button *, [role="button"] *, [type="button"] *, [type="submit"] *, [type="reset"] *,
+a:not(label) *, a[href]:not(label) *,
+.router-link-active *, .router-link-exact-active *,
+button span, button svg, button div, button img,
+a:not(label) span, a:not(label) svg, a:not(label) div, a:not(label) img {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+/* Disable pointer events only on decorative elements inside buttons/links (not labels) */
+button svg, button svg *,
+a:not(label) svg, a:not(label) svg *,
+.router-link-active svg, .router-link-active svg *,
+.router-link-exact-active svg, .router-link-exact-active svg * {
+  pointer-events: none;
+}
+
+/* Labels and their children should allow pointer events for file inputs */
+label, label * {
+  pointer-events: auto !important;
+}
+
+/* Cursor pointer specifically on labels */
+label[for] {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+label[for] * {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+/* Ensure all buttons have proper hover areas */
+button, [role="button"], [type="button"], [type="submit"], [type="reset"] {
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
+
+/* Text cursor - ONLY on text input fields */
+input[type="text"], input[type="email"], input[type="password"], input[type="search"],
+input[type="tel"], input[type="url"], input[type="number"], textarea,
+[contenteditable="true"], .cursor-text {
+  cursor: url('/textcursor.svg') 16 16, text !important;
+}
+
+/* Ensure SVG icons inherit cursor from parent (but not inside labels for file inputs) */
+button svg, button svg *,
+a:not(label) svg, a:not(label) svg *,
+[role="button"]:not(label) svg, [role="button"]:not(label) svg *,
+.router-link svg, .router-link svg * {
+  pointer-events: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom scrollbar - purple pill with cream track */
+html,
+body {
+  overflow-x: hidden;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+::-webkit-scrollbar-track {
+  background: #fffaed !important;
+  background-color: #fffaed !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+html::-webkit-scrollbar-track-piece,
+body::-webkit-scrollbar-track-piece,
+::-webkit-scrollbar-track-piece {
+  background: #fffaed !important;
+  background-color: #fffaed !important;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  background: #9333ea !important;
+  background-color: #9333ea !important;
+  border-radius: 5px !important;
+  border: none !important;
+  -webkit-border-radius: 5px !important;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:hover {
+  background: #7e22ce !important;
+  background-color: #7e22ce !important;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+::-webkit-scrollbar-corner {
+  background: #fffaed !important;
+}
+
+html::-webkit-scrollbar-button,
+body::-webkit-scrollbar-button,
+::-webkit-scrollbar-button {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+/* Firefox scrollbar */
+html,
+body,
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: #9333ea #fffaed !important;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse glow effect */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(234, 179, 8, 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-secondary {
+  @apply bg-gradient-to-r from-lemon-400 to-lemon-500 hover:from-lemon-500 hover:to-lemon-600 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg;
+}
+
+.input-field {
+  @apply w-full px-4 py-3 border-2 border-purple-300 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 outline-none transition-all bg-white/80 backdrop-blur-sm;
+}
+
+.input-field:focus {
+  transform: scale(1.02);
+}
+
+.card {
+  @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border-2 border-purple-100 hover:shadow-2xl transition-all;
+}
+
+/* Download Progress: Prism */
+@keyframes stream-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.prism-track {
+  background: #f1f5f9;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.prism-fill {
+  background: linear-gradient(90deg, #ff00cc, #3333ff, #00ccff, #ff00cc);
+  background-size: 200% 200%;
+  animation: stream-flow 2s linear infinite;
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+}
+
+.prism-glass-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.2) 40%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+/* Upload Progress: Fusion Rail */
+@keyframes molten-pulse {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes heat-shimmer {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.rail-track {
+  background-color: #1e293b;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 19px,
+    rgba(255, 255, 255, 0.1) 19px,
+    rgba(255, 255, 255, 0.1) 20px
+  );
+  border-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.plasma-fill {
+  background: linear-gradient(90deg, #ea580c, #facc15, #ea580c);
+  background-size: 200% 100%;
+  animation: molten-pulse 1.5s ease infinite;
+  box-shadow: 0 0 15px rgba(234, 88, 12, 0.5);
+  position: relative;
+}
+
+.fusion-head {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 24px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px #fff, 0 0 20px #facc15;
+  z-index: 10;
+}
+
+.fusion-head::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: heat-shimmer 0.8s ease-out infinite;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Scroll reveal animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* Additional cursor utilities */
+.cursor-pointer-custom {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+.cursor-arrow-custom {
+  cursor: url('/cursor-arrow.svg') 8 8, auto !important;
+}
+
+.cursor-text-custom {
+  cursor: url('/textcursor.svg') 16 16, text !important;
+}
+
+/* Fix for router-link and clickable elements */
+.router-link-active, .router-link-exact-active, a[href] {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+/* Ensure all interactive Vue components have proper cursor */
+[class*="hover:"]:not(p):not(span):not(div:not([onclick]):not([role="button"])) {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+/* Button-specific cursor fixes */
+.btn-primary, .btn-secondary {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+.btn-primary *, .btn-secondary * {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+  pointer-events: none;
+}
+
+/* Ensure proper cursor on Lottie animations inside buttons */
+button .lottie, button img, button svg,
+[role="button"] .lottie, [role="button"] img, [role="button"] svg {
+  pointer-events: none !important;
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}
+
+/* Clickable cards and containers */
+.hover\:shadow-xl, .hover\:shadow-lg, .hover\:shadow-2xl,
+[class*="hover:scale"], [class*="hover:transform"] {
+  cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@fileduck/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch server.ts",
+    "dev:vercel": "vercel dev --yes",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "deploy": "vercel --prod",
+    "clean": "rm -rf dist .vercel"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.981.0",
+    "@aws-sdk/s3-request-presigner": "^3.981.0",
+    "@fileduck/shared": "workspace:*",
+    "@octokit/rest": "^22.0.1",
+    "@types/formidable": "^3.4.6",
+    "@upstash/redis": "^1.36.2",
+    "axios": "^1.13.4",
+    "busboy": "^1.6.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "form-data": "^4.0.5",
+    "formidable": "^3.5.4",
+    "pako": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/pako": "^2.0.4",
+    "@vercel/node": "^3.0.11",
+    "cors": "^2.8.6",
+    "tsx": "^4.21.0",
+    "typescript": "^5.3.3",
+    "vercel": "^33.0.1"
+  }
+}

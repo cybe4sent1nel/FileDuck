@@ -1,0 +1,18 @@
+# Ignore backend API - deployed on Railway
+apps/api/
+packages/scanner/
+
+# Ignore development files
+*.log
+.env.local
+.env.*.local
+node_modules
+.DS_Store
+dist-ssr
+*.local
+
+# Ignore test files
+*.test.ts
+*.spec.ts
+__tests__/
+coverage/

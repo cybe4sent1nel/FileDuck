@@ -1,0 +1,85 @@
+services:
+  # ClamAV Daemon
+  clamav:
+    image: clamav/clamav:latest
+    container_name: fileduck-clamav
+    ports:
+      - "3310:3310"
+    volumes:
+      - clamav-data:/var/lib/clamav
+    environment:
+      - CLAMAV_NO_FRESHCLAMD=false
+    healthcheck:
+      test: ["CMD", "clamdscan", "--ping", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MinIO (S3-compatible storage for development)
+  minio:
+    image: minio/minio:latest
+    container_name: fileduck-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis (alternative to Upstash for local dev)
+  redis:
+    image: redis:7-alpine
+    container_name: fileduck-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Scanner Service
+  scanner:
+    build:
+      context: .
+      dockerfile: ./packages/scanner/Dockerfile
+    container_name: fileduck-scanner
+    ports:
+      - "4000:4000"
+    depends_on:
+      - clamav
+      - minio
+      - redis
+    environment:
+      - CLAMAV_HOST=clamav
+      - CLAMAV_PORT=3310
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin123
+      - AWS_ENDPOINT=http://minio:9000
+      - S3_BUCKET_QUARANTINE=fileduck-quarantine
+      - S3_BUCKET_PUBLIC=fileduck-public
+      - UPSTASH_REDIS_URL=redis://redis:6379
+      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY}
+      - SCANNER_PORT=4000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  clamav-data:
+  minio-data:
+  redis-data:

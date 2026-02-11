@@ -1,0 +1,21 @@
+export declare function generateShareCode(): string;
+export declare function validateShareCode(code: string): boolean;
+export declare function computeSHA256(file: any): Promise<string>;
+export declare function formatFileSize(bytes: number): string;
+export declare function formatTimeRemaining(expiresAt: number): string;
+export declare function sanitizeFilename(filename: string): string;
+export declare function isValidMimeType(mimeType: string): boolean;
+export declare function getFileExtension(filename: string): string;
+export declare const CONSTANTS: {
+    readonly MIN_CODE_LENGTH: 8;
+    readonly MAX_CODE_LENGTH: 10;
+    readonly MIN_ENTROPY_BITS: 40;
+    readonly MAX_FILE_SIZE: number;
+    readonly DEFAULT_TTL_HOURS: 24;
+    readonly DEFAULT_MAX_USES: 1;
+    readonly MULTIPART_CHUNK_SIZE: number;
+    readonly SIGNED_URL_EXPIRY: 3600;
+    readonly RATE_LIMIT_WINDOW: number;
+    readonly RATE_LIMIT_MAX: 10;
+    readonly CAPTCHA_THRESHOLD: 3;
+};

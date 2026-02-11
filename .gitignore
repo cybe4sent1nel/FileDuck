@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production
+dist/
+build/
+.next/
+out/
+
+# Environment & Secrets
+.env
+.env*.local
+VERCEL_ENV.txt
+**/credentials.json
+**/*secret*
+**/*credentials*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.turbo/
+.vercel/
+*.tsbuildinfo
+.env.vercel.production
+.railway/
+tmpclaude-*-cwd
+
+# Deployment Scripts (local use only)
+deploy-*.sh
+deploy-*.ps1
+deploy-*.bat
+setup.sh
+setup.bat
+quick-deploy.*
+render-deploy.*
+render-logs.*
+docker-compose.yml
+
+# Deployment Documentation (local references)
+RAILWAY_DEPLOYMENT.md
+RENDER_DEPLOYMENT.md
+RENDER_DEPLOY_GUIDE.md
+RENDER_SETUP_SUMMARY.md
+DEPLOY_NOW.md
+
+# Local Netlify folder
+.netlify
