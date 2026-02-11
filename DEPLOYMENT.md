@@ -36,7 +36,7 @@ VITE_API_URL=https://fileduck-api.onrender.com
 5. Redeploy to apply changes
 
 ### 2. Render (Backend API ONLY)
-- **Service ID**: `srv-d65u1s3nv86c73dvsi20`
+- **Service ID**: `srv-d65vqkkr85hc73d2t050`
 - **Deploys**: Backend API via Docker (`apps/api/Dockerfile`)
 - **Auto-Deploy**: ✅ Enabled
 - **Branch**: `main`
@@ -56,7 +56,7 @@ VITE_API_URL=https://fileduck-api.onrender.com
 
 **Setup Instructions:**
 1. Go to [Render Dashboard](https://dashboard.render.com/)
-2. Select service `fileduck-api` (`srv-d65u1s3nv86c73dvsi20`)
+2. Select service `fileduck-api` (`srv-d65vqkkr85hc73d2t050`)
 3. Ensure GitHub repository is connected with branch `main`
 4. Set all required environment variables
 5. Enable "Auto-Deploy" for main branch
@@ -93,7 +93,7 @@ All platforms automatically deploy when:
 services:
   - type: web
     name: fileduck-api
-    serviceId: srv-d65u1s3nv86c73dvsi20
+    serviceId: srv-d65vqkkr85hc73d2t050
     runtime: docker
     dockerfile: ./apps/api/Dockerfile
     dockerContext: ./
@@ -198,7 +198,7 @@ vercel --prod
 ### Render (Backend)
 ```bash
 # Trigger deploy via API
-curl -X POST "https://api.render.com/v1/services/srv-d65u1s3nv86c73dvsi20/deploys" \
+curl -X POST "https://api.render.com/v1/services/srv-d65vqkkr85hc73d2t050/deploys" \
   -H "Authorization: Bearer YOUR_RENDER_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{}'

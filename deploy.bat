@@ -10,7 +10,7 @@ if "%1"=="" (
 )
 
 setlocal enabledelayedexpansion
-set SERVICE_ID=srv-d65u1s3nv86c73dvsi20
+set SERVICE_ID=srv-d65vqkkr85hc73d2t050
 set API_KEY=%1
 
 echo Deploying FileDuck API to Render...

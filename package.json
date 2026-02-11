@@ -9,7 +9,7 @@
     "dev:api": "pnpm --filter @fileduck/api dev",
     "dev:web": "pnpm --filter @fileduck/vue-app dev",
     "build": "turbo run build",
-    "build:backend": "pnpm --filter @fileduck/scanner build && pnpm --filter @fileduck/api build",
+    "build:backend": "pnpm --filter @fileduck/shared build && pnpm --filter @fileduck/scanner build && pnpm --filter @fileduck/api build",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
@@ -20,7 +20,7 @@
     "docker:restart": "docker-compose restart",
     "docker:clean": "docker-compose down -v",
     "docker:check": "node scripts/check-docker.js",
-    "render:dashboard": "start https://dashboard.render.com/services/srv-d65u1s3nv86c73dvsi20",
+    "render:dashboard": "start https://dashboard.render.com/services/srv-d65vqkkr85hc73d2t050",
     "setup": "pnpm install",
     "stop": "pnpm run docker:down"
   },

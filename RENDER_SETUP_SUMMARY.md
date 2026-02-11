@@ -1,7 +1,7 @@
 # Render Deployment Setup Summary
 
 ## Service Information
-- **Service ID**: `srv-d65u1s3nv86c73dvsi20`
+- **Service ID**: `srv-d65vqkkr85hc73d2t050`
 - **Service Name**: `fileduck-api`
 - **Runtime**: Docker
 - **Region**: Oregon
@@ -51,7 +51,7 @@ All environment variables are configured in render.yaml and render.json:
 
 ### Immediate Actions (Required)
 1. Go to https://dashboard.render.com/
-2. Open your service: `fileduck-api` (srv-d65u1s3nv86c73dvsi20)
+2. Open your service: `fileduck-api` (srv-d65vqkkr85hc73d2t050)
 3. **Connect GitHub Repository**:
    - Repository: `https://github.com/cybe4sent1nel/FILE-DUCK`
    - Branch: `main`
@@ -94,7 +94,7 @@ npm run render:logs
 
 ### render.yaml
 ```yaml
-- Service ID: srv-d65u1s3nv86c73dvsi20
+- Service ID: srv-d65vqkkr85hc73d2t050
 - Name: fileduck-api
 - Runtime: docker
 - Start: node dist/server.js

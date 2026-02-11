@@ -65,3 +65,24 @@ DEPLOY_NOW.md
 
 # Local Netlify folder
 .netlify
+
+# Root-level image duplicates (originals in apps/vue-app/public/)
+/about.png
+/cdn.png
+/privacy.png
+/logo.png.png
+/malware scanned.png
+/handpointing.svg
+/textcursor.svg
+/pointer-tool-svgrepo-com.svg
+/trusted/
+
+# Binary / large files
+*.bin
+*.part
+
+# Obsolete platform configs
+fly.toml
+
+# Test artifacts
+**/test-*-screenshot.png

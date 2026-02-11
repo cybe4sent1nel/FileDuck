@@ -1,7 +1,7 @@
 services:
   - type: web
     name: fileduck-api
-    serviceId: srv-d65u1s3nv86c73dvsi20
+    serviceId: srv-d65vqkkr85hc73d2t050
     runtime: docker
     plan: standard
     region: oregon
