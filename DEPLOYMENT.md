@@ -2,14 +2,14 @@
 
 This project uses a **split deployment architecture**:
 - **Vercel**: Frontend (Vue app) only
-- **Railway**: Backend API only
+- **Render**: Backend API only
 - **Netlify**: Backup frontend (optional)
 
 ## Architecture Overview
 
 ```
 ┌─────────────┐      API Requests       ┌─────────────┐
-│   Vercel    │ ──────────────────────> │   Railway   │
+│   Vercel    │ ──────────────────────> │   Render    │
 │  (Frontend) │                         │  (Backend)  │
 │  Vue App    │ <────────────────────── │  API        │
 └─────────────┘      JSON Response      └─────────────┘
@@ -25,36 +25,41 @@ This project uses a **split deployment architecture**:
 
 **Environment Variables Required:**
 ```
-VITE_API_URL=https://your-railway-backend.railway.app
+VITE_API_URL=https://fileduck-api.onrender.com
 ```
 
 **Setup Instructions:**
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your project `file-duck`
 3. Go to Settings → Environment Variables
-4. Add `VITE_API_URL` pointing to your Railway backend URL
+4. Add `VITE_API_URL` pointing to your Render backend URL
 5. Redeploy to apply changes
 
-### 2. Railway (Backend API ONLY)
-- **Deploys**: Backend API from `apps/api`
+### 2. Render (Backend API ONLY)
+- **Service ID**: `srv-d65u1s3nv86c73dvsi20`
+- **Deploys**: Backend API via Docker (`apps/api/Dockerfile`)
 - **Auto-Deploy**: ✅ Enabled
 - **Branch**: `main`
-- **Root Directory**: `apps/api`
+- **Runtime**: Docker
+- **Start Command**: `node dist/server.js`
+- **Health Check**: `/api/health`
+- **Port**: 3001
 
 **Environment Variables Required:**
-- `REDIS_URL` - Redis connection string
+- `UPSTASH_REDIS_URL` - Redis connection string
+- `UPSTASH_REDIS_TOKEN` - Redis token
 - `GITHUB_TOKEN` - For GitHub file storage
 - `GITHUB_REPO` - Repository for file storage
 - `USE_GITHUB_STORAGE=true`
 - `NODE_ENV=production`
-- All other backend-specific variables
+- All other backend-specific variables (see `render.yaml`)
 
 **Setup Instructions:**
-1. Go to [Railway Dashboard](https://railway.app/dashboard)
-2. Select your project
-3. Ensure "Root Directory" is set to `apps/api`
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Select service `fileduck-api` (`srv-d65u1s3nv86c73dvsi20`)
+3. Ensure GitHub repository is connected with branch `main`
 4. Set all required environment variables
-5. Enable "Auto Deploy" for main branch
+5. Enable "Auto-Deploy" for main branch
 
 ### 3. Netlify (Frontend Backup - Optional)
 - **Deploys**: Vue app (same as Vercel)
@@ -66,7 +71,7 @@ VITE_API_URL=https://your-railway-backend.railway.app
 **Setup Instructions:**
 1. Go to [Netlify Dashboard](https://app.netlify.com/)
 2. Select your site
-3. Set environment variable: `VITE_API_URL` to Railway backend URL
+3. Set environment variable: `VITE_API_URL` to Render backend URL
 4. Enable "Auto publishing"
 
 ## Deployment Triggers
@@ -78,10 +83,23 @@ All platforms automatically deploy when:
 
 **What Gets Deployed Where:**
 - **Vercel**: Only `apps/vue-app` (frontend)
-- **Railway**: Only `apps/api` (backend)
+- **Render**: Backend API via Docker (entire repo as build context)
 - **Netlify**: Only `apps/vue-app` (frontend backup)
 
 ## Configuration Files
+
+### render.yaml (Backend - Render)
+```yaml
+services:
+  - type: web
+    name: fileduck-api
+    serviceId: srv-d65u1s3nv86c73dvsi20
+    runtime: docker
+    dockerfile: ./apps/api/Dockerfile
+    dockerContext: ./
+    startCommand: node dist/server.js
+    healthCheckPath: /api/health
+```
 
 ### vercel.json (Frontend Only)
 ```json
@@ -114,6 +132,13 @@ apps/api/
 packages/scanner/
 ```
 
+## GitHub Actions (CI/CD)
+
+### Deploy to Render (`.github/workflows/deploy-render.yml`)
+- Triggers on push to `main` or manual `workflow_dispatch`
+- Uses Render API to trigger a deploy
+- Requires GitHub secrets: `RENDER_API_KEY` and `RENDER_SERVICE_ID`
+
 ## Testing the Setup
 
 ### 1. Test Frontend Deployment (Vercel)
@@ -125,36 +150,36 @@ git push origin main
 
 Check: https://your-project.vercel.app
 
-### 2. Test Backend Deployment (Railway)
+### 2. Test Backend Deployment (Render)
 ```bash
-# Same push triggers Railway
+# Same push triggers Render via GitHub Actions
 git push origin main
 ```
 
-Check: https://your-project.railway.app/api/health
+Check: https://fileduck-api.onrender.com/api/health
 
 ### 3. Verify Connection
 - Open browser console on Vercel site
 - Upload a file
-- Check Network tab - API requests should go to Railway URL
+- Check Network tab - API requests should go to Render URL
 - Look for `VITE_API_URL` in requests
 
 ## Troubleshooting
 
 ### Error: "Too many serverless functions"
-✅ **FIXED**: Backend removed from Vercel. Now deploys on Railway only.
+✅ **FIXED**: Backend removed from Vercel. Now deploys on Render only.
 
 ### Frontend can't connect to backend
 1. Check `VITE_API_URL` environment variable in Vercel
-2. Ensure Railway backend is deployed and running
-3. Check Railway logs for errors
+2. Ensure Render backend is deployed and running
+3. Check Render logs for errors
 4. Verify CORS settings in backend
 
-### Railway deployment fails
-1. Check environment variables are set
-2. Verify Root Directory is `apps/api`
-3. Check Railway logs for build errors
-4. Ensure all dependencies in `apps/api/package.json`
+### Render deployment fails
+1. Check environment variables are set in Render dashboard
+2. Verify Docker build succeeds (check Render build logs)
+3. Ensure `pnpm install` completes without errors
+4. Verify TypeScript builds correctly: `pnpm run build:backend`
 
 ### Vercel deployment fails
 1. Check build logs for errors
@@ -170,10 +195,13 @@ Check: https://your-project.railway.app/api/health
 vercel --prod
 ```
 
-### Railway (Backend)
+### Render (Backend)
 ```bash
-# From project root
-railway up
+# Trigger deploy via API
+curl -X POST "https://api.render.com/v1/services/srv-d65u1s3nv86c73dvsi20/deploys" \
+  -H "Authorization: Bearer YOUR_RENDER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{}'
 ```
 
 ### Netlify (Frontend Backup)
@@ -187,12 +215,13 @@ netlify deploy --prod --dir=apps/vue-app/dist
 ### Vercel (Frontend)
 | Variable | Value | Required |
 |----------|-------|----------|
-| `VITE_API_URL` | `https://your-railway.railway.app` | ✅ Yes |
+| `VITE_API_URL` | `https://fileduck-api.onrender.com` | ✅ Yes |
 
-### Railway (Backend)
+### Render (Backend)
 | Variable | Example | Required |
 |----------|---------|----------|
-| `REDIS_URL` | `redis://...` | ✅ Yes |
+| `UPSTASH_REDIS_URL` | `https://...upstash.io` | ✅ Yes |
+| `UPSTASH_REDIS_TOKEN` | `AX...` | ✅ Yes |
 | `GITHUB_TOKEN` | `ghp_...` | ✅ Yes |
 | `GITHUB_REPO` | `owner/repo` | ✅ Yes |
 | `USE_GITHUB_STORAGE` | `true` | ✅ Yes |
@@ -201,5 +230,4 @@ netlify deploy --prod --dir=apps/vue-app/dist
 ### Netlify (Backup Frontend)
 | Variable | Value | Required |
 |----------|-------|----------|
-| `VITE_API_URL` | `https://your-railway.railway.app` | ✅ Yes |
-
+| `VITE_API_URL` | `https://fileduck-api.onrender.com` | ✅ Yes |

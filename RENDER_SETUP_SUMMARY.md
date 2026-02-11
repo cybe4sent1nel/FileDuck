@@ -10,21 +10,21 @@
 ## Files Created/Updated
 
 ### New Configuration Files
-1. **render.yaml** - Primary YAML configuration matching Railway setup
+1. **render.yaml** - Primary YAML service configuration
 2. **render.json** - JSON format alternative configuration
 3. **RENDER_DEPLOYMENT.md** - Detailed deployment guide
 4. **RENDER_DEPLOY_GUIDE.md** - Quick start guide with service ID
 5. **RENDER_SETUP_SUMMARY.md** - This file
 
 ### Updated Files
-1. **railway.toml** - Added comment referencing Render option
+
 2. **package.json** - Added Render deployment scripts
 
 ### Deploy Scripts
 1. **deploy-render.ps1** - PowerShell deployment script (Windows)
 2. **deploy-render.sh** - Bash deployment script (Unix/Linux)
 
-## Deployment Configuration (Same as Railway)
+## Deployment Configuration
 
 ### Build Settings
 - **Builder**: Docker
@@ -39,7 +39,7 @@
 - **Port**: 3001
 
 ### Environment Variables
-All Railway environment variables are configured in render.yaml and render.json:
+All environment variables are configured in render.yaml and render.json:
 - Redis (Upstash)
 - AWS S3/MinIO credentials
 - Malware scanning (ClamAV, VirusTotal)
@@ -80,15 +80,15 @@ npm run render:logs
 
 ## Configuration Comparison
 
-| Feature | Railway | Render |
-|---------|---------|--------|
-| Builder | Dockerfile | Docker |
-| Start Command | node dist/server.js | node dist/server.js |
-| Health Check | /api/health | /api/health |
-| Restart Policy | ON_FAILURE, max 3 | on_failure, max 3 |
-| Port | 3001 | 3001 |
-| Dockerfile | apps/api/Dockerfile | apps/api/Dockerfile |
-| Environment Vars | Railway dashboard | render.yaml + Render dashboard |
+| Feature | Value |
+|---------|-------|
+| Builder | Docker |
+| Start Command | node dist/server.js |
+| Health Check | /api/health |
+| Restart Policy | on_failure, max 3 |
+| Port | 3001 |
+| Dockerfile | apps/api/Dockerfile |
+| Environment Vars | render.yaml + Render dashboard |
 
 ## Key Files Reference
 
