@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { uploadToGitHub } from '../lib/github-storage.js';
-import { updateMetadata } from '../lib/redis.js';
+import redis, { updateMetadata } from '../lib/redis.js';
 import busboy from 'busboy';
 
 const USE_GITHUB_STORAGE = process.env.USE_GITHUB_STORAGE !== 'false';
@@ -26,6 +26,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Track active transfer
+    if (redis) {
+      await redis.incr('metrics:active_transfers');
+    }
+
     // Parse multipart/form-data
     const result = await parseMultipartForm(req);
     const { shareCode, fileBuffer, filename, sha256, chunkIndex, totalChunks, isLastChunk } = result;
@@ -66,9 +71,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Proceed with upload
       if (USE_GITHUB_STORAGE && IS_PRODUCTION) {
         console.log(`Uploading ${filename} to GitHub (${completeFile.length} bytes)...`);
-      
+
         const result = await uploadToGitHub(filename, completeFile, sha256);
-        
+
         // Update Redis metadata with GitHub download URL and release ID
         await updateMetadata(shareCode, {
           downloadUrl: result.downloadUrl,
@@ -78,6 +83,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         console.log(`✓ File uploaded to GitHub: ${result.downloadUrl}`);
+
+        // Update bytes metric
+        if (redis) {
+          await redis.incrby('metrics:upload_bytes_total', completeFile.length);
+        }
 
         return res.status(200).json({
           success: true,
@@ -89,15 +99,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Single chunk upload (file ≤8MB)
       if (USE_GITHUB_STORAGE && IS_PRODUCTION) {
         console.log(`Uploading ${filename} to GitHub (${fileBuffer.length} bytes)...`);
-        
+
         const result = await uploadToGitHub(filename, fileBuffer, sha256);
-        
+
         await updateMetadata(shareCode, {
           downloadUrl: result.downloadUrl,
           githubReleaseId: result.metadata.releaseId,
           githubMetadata: result.metadata,
           scanStatus: 'clean',
         });
+
+        // Update bytes metric
+        if (redis) {
+          await redis.incrby('metrics:upload_bytes_total', fileBuffer.length);
+        }
 
         console.log(`✓ File uploaded to GitHub: ${result.downloadUrl}`);
 
@@ -108,7 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
       }
     }
-    
+
     return res.status(200).json({
       success: true,
       message: 'File received',
@@ -120,6 +135,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       code: 'SERVER_ERROR',
       details: error.message,
     });
+  } finally {
+    // Decrement active transfers
+    if (redis) {
+      await redis.decr('metrics:active_transfers');
+    }
   }
 }
 

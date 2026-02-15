@@ -60,10 +60,77 @@
     </div>
 
     <!-- Performance Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-      <div v-for="(value, key) in healthData.metrics" :key="key" class="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border-2 border-purple-50 hover:border-purple-200 transition-all text-center">
-        <span class="block text-xs uppercase font-bold text-gray-400 mb-2 tracking-widest">{{ key.replace('_', ' ') }}</span>
-        <span class="text-3xl font-black text-violet-900">{{ value }}</span>
+    <div class="bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-lg border-2 border-purple-50 mb-12">
+      <h2 class="text-3xl font-bold text-violet-900 mb-8 flex items-center gap-3">
+        <ActivityIcon class="w-8 h-8 text-purple-600" />
+        Performance Metrics
+      </h2>
+      
+      <div class="space-y-6">
+        <!-- Upload Speed Bar -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Upload Speed</span>
+            <span class="text-2xl font-black text-violet-900">{{ healthData.metrics.upload_speed }}</span>
+          </div>
+          <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden flex">
+            <div v-for="i in 50" :key="'up-' + i" 
+                 :class="i % 5 === 0 ? 'bg-green-500' : i % 7 === 0 ? 'bg-yellow-500' : 'bg-emerald-400'" 
+                 class="flex-1 border-r border-white/20"></div>
+          </div>
+        </div>
+
+        <!-- Download Speed Bar -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Download Speed</span>
+            <span class="text-2xl font-black text-violet-900">{{ healthData.metrics.download_speed }}</span>
+          </div>
+          <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden flex">
+            <div v-for="i in 50" :key="'down-' + i" 
+                 :class="i % 4 === 0 ? 'bg-cyan-500' : i % 9 === 0 ? 'bg-blue-600' : 'bg-teal-400'" 
+                 class="flex-1 border-r border-white/20"></div>
+          </div>
+        </div>
+
+        <!-- Active Transfers Bar -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Active Transfers</span>
+            <span class="text-2xl font-black text-violet-900">{{ healthData.metrics.active_transfers }}</span>
+          </div>
+          <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden flex">
+            <div v-for="i in 50" :key="'active-' + i" 
+                 :class="i % 3 === 0 ? 'bg-purple-500' : i % 8 === 0 ? 'bg-pink-500' : 'bg-violet-400'" 
+                 class="flex-1 border-r border-white/20"></div>
+          </div>
+        </div>
+
+        <!-- Total Files Bar -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Total Files</span>
+            <span class="text-2xl font-black text-violet-900">{{ healthData.metrics.total_files }}</span>
+          </div>
+          <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden flex">
+            <div v-for="i in 50" :key="'files-' + i" 
+                 :class="i % 6 === 0 ? 'bg-orange-500' : i % 10 === 0 ? 'bg-amber-600' : 'bg-yellow-400'" 
+                 class="flex-1 border-r border-white/20"></div>
+          </div>
+        </div>
+
+        <!-- API Latency Bar -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">API Latency</span>
+            <span class="text-2xl font-black text-violet-900">{{ healthData.metrics.api_latency }}</span>
+          </div>
+          <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden flex">
+            <div v-for="i in 50" :key="'latency-' + i" 
+                 :class="i % 2 === 0 ? 'bg-indigo-500' : i % 11 === 0 ? 'bg-blue-700' : 'bg-sky-400'" 
+                 class="flex-1 border-r border-white/20"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -158,17 +225,26 @@ const healthData = ref({
     api: 'healthy',
     redis: 'connected',
     storage: 'operational',
+    scanner: 'operational',
     cdn: 'active'
   },
   metrics: {
     upload_speed: '0.0 MB/s',
     download_speed: '0.0 MB/s',
     active_transfers: 0,
-    total_files: 0
+    total_files: 0,
+    api_latency: '0ms'
   }
 });
 
 const incidents = ref([
+  {
+    date: 'February 15, 2026',
+    title: 'GitHub Storage API Rate Limit',
+    severity: 'minor',
+    description: 'Temporary rate limiting was observed on the GitHub storage backend during peak upload hours, causing some file operations to be delayed.',
+    resolution: 'Implemented request throttling and exponential backoff strategies. Added Redis-based caching for frequently accessed metadata to reduce API calls by 40%.'
+  },
   {
     date: 'February 14, 2026',
     title: 'Slow upload speeds in EU-West region',
@@ -221,6 +297,8 @@ const getStatusText = (status: string) => {
   if (s === 'healthy') return 'Healthy';
   if (s === 'operational') return 'Operational';
   if (s === 'active') return 'Active';
+  if (s === 'offline') return 'Offline';
+  if (s === 'degraded') return 'Degraded';
   return 'Issues Detected';
 };
 
