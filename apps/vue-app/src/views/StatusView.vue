@@ -31,7 +31,7 @@
               </div>
               <div>
                 <h3 class="text-xl font-bold text-gray-900">{{ getServiceDisplayName(name) }}</h3>
-                <div v-if="name === 'api' || name === 's3' || name === 'storage'" class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                <div v-if="name === 'api' || name === 's3' || (name as string) === 'storage'" class="text-xs text-gray-500 flex items-center gap-1 mt-1">
                   <span class="text-gray-400">●</span>
                   <span>{{ getComponentCount(name) }} components</span>
                 </div>
@@ -567,7 +567,7 @@ const fetchHealth = async () => {
 let interval: any;
 onMounted(() => {
   fetchHealth();
-  interval = setInterval(fetchHealth, 60000);
+  interval = setInterval(fetchHealth, 300000); // Check every 5 minutes instead of 1 minute
 });
 
 onUnmounted(() => {
