@@ -140,8 +140,14 @@ async function checkConnectivity() {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3000);
-    // Fix: Ensure /api prefix is used
-    const healthUrl = apiBase ? `${apiBase}/api/health` : '/api/health';
+
+    // Fix: Ensure /api prefix is used correctly without duplication
+    let apiBase = import.meta.env.VITE_API_URL || '';
+    if (apiBase.endsWith('/')) apiBase = apiBase.slice(0, -1);
+
+    const healthUrl = apiBase
+      ? (apiBase.endsWith('/api') ? `${apiBase}/health` : `${apiBase}/api/health`)
+      : '/api/health';
 
     const response = await fetch(healthUrl, {
       method: 'GET',

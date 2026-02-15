@@ -543,8 +543,17 @@ const getSeverityBorderClass = (severity: string) => {
 
 const fetchHealth = async () => {
   try {
-    const apiBase = import.meta.env.VITE_API_URL || '';
-    const healthUrl = apiBase ? `${apiBase}/api/health` : '/api/health';
+    let apiBase = import.meta.env.VITE_API_URL || '';
+    // Remove trailing slash if present
+    if (apiBase.endsWith('/')) {
+      apiBase = apiBase.slice(0, -1);
+    }
+    
+    // Construct health URL correctly avoiding double /api
+    // If apiBase already ends with /api, don't add it again
+    const healthUrl = apiBase 
+      ? (apiBase.endsWith('/api') ? `${apiBase}/health` : `${apiBase}/api/health`)
+      : '/api/health';
     
     // Log for debugging
     console.log('[Status Page] Fetching:', healthUrl);
