@@ -266,8 +266,14 @@ let healthCheckInterval: any;
 
 const checkHealth = async () => {
   try {
-    const apiBase = import.meta.env.VITE_API_URL || '';
-    const healthUrl = apiBase ? `${apiBase}/api/health` : '/api/health';
+    let apiBase = import.meta.env.VITE_API_URL || '';
+    if (apiBase.endsWith('/')) apiBase = apiBase.slice(0, -1);
+    
+    // Fix: Ensure /api prefix is used correctly without duplication
+    const healthUrl = apiBase 
+      ? (apiBase.endsWith('/api') ? `${apiBase}/health` : `${apiBase}/api/health`)
+      : '/api/health';
+
     const response = await fetch(healthUrl);
     isBackendHealthy.value = response.ok;
   } catch (error) {
@@ -409,7 +415,7 @@ onMounted(() => {
 
   // Initial health check and interval
   checkHealth();
-  healthCheckInterval = setInterval(checkHealth, 60000); // Check every 60s
+  healthCheckInterval = setInterval(checkHealth, 300000); // Check every 5 minutes (300s)
 });
 
 onUnmounted(() => {
