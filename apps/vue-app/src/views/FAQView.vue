@@ -425,9 +425,9 @@
       </section>
 
       <!-- Still Have Questions -->
-      <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-xl p-8 text-center text-white">
-        <h2 class="text-3xl font-bold mb-4">Still Have Questions?</h2>
-        <p class="text-xl mb-6">Explore our comprehensive documentation for more details</p>
+      <div class="bg-purple-100 rounded-3xl shadow-xl p-10 text-center border-2 border-purple-200">
+        <h2 class="text-4xl font-bold mb-4 text-purple-900">Still Have Questions?</h2>
+        <p class="text-xl mb-8 text-purple-700">Explore our comprehensive documentation for more details</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <router-link
             to="/docs"

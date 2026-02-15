@@ -228,9 +228,19 @@
             <p class="text-sm text-gray-600">
               &copy; 2026 FileDuck. All rights reserved.
             </p>
-            <div class="flex items-center space-x-2 text-sm">
-              <span class="text-gray-600">Designed & Developed by</span>
-              <span class="font-bold text-purple-600">Fahad Khan</span>
+            <div class="flex flex-col md:flex-row items-center gap-4">
+              <div class="flex items-center space-x-2 text-sm">
+                <span class="text-gray-600">Designed & Developed by</span>
+                <span class="font-bold text-purple-600">Fahad Khan</span>
+              </div>
+              
+              <!-- Footer Health Badge -->
+              <router-link to="/status" class="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 text-green-700 rounded-full border border-green-100 hover:border-green-300 transition-all group/status animate-pulse-glow">
+                <div class="w-2 h-2 rounded-full" :class="isBackendHealthy ? 'bg-green-500' : 'bg-red-500'"></div>
+                <span class="text-xs font-bold whitespace-nowrap">
+                  {{ isBackendHealthy ? 'All systems operational' : 'System issues detected' }}
+                </span>
+              </router-link>
             </div>
           </div>
         </div>
@@ -240,7 +250,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { UploadIcon, DownloadIcon, ClockIcon, ShieldCheckIcon, ZapIcon, FileIcon, FolderIcon, FileTextIcon, ImageIcon, FileCodeIcon, HomeIcon, BookOpenIcon, HelpCircleIcon, MailIcon, LockIcon, GithubIcon } from 'lucide-vue-next';
 import ParticleBackground from './components/ParticleBackground.vue';
@@ -249,8 +259,21 @@ import NotificationContainer from './components/NotificationContainer.vue';
 const router = useRouter();
 const route = useRoute();
 
-const adsLoaded = ref(false);
 const mobileMenuOpen = ref(false);
+const adsLoaded = ref(false);
+const isBackendHealthy = ref(true);
+let healthCheckInterval: any;
+
+const checkHealth = async () => {
+  try {
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    const healthUrl = apiBase ? `${apiBase}/api/health` : '/api/health';
+    const response = await fetch(healthUrl);
+    isBackendHealthy.value = response.ok;
+  } catch (error) {
+    isBackendHealthy.value = false;
+  }
+};
 
 // Check if current page is an error page
 const isErrorPage = computed(() => {
@@ -383,6 +406,14 @@ onMounted(() => {
     console.error('AdSense error:', err);
     adsLoaded.value = false;
   }
+
+  // Initial health check and interval
+  checkHealth();
+  healthCheckInterval = setInterval(checkHealth, 60000); // Check every 60s
+});
+
+onUnmounted(() => {
+  if (healthCheckInterval) clearInterval(healthCheckInterval);
 });
 
 // Scroll to upload section
@@ -423,5 +454,14 @@ const scrollToUpload = () => {
   position: absolute;
   top: -100px;
   animation: fall linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+  50% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.15); }
 }
 </style>

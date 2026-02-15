@@ -2,12 +2,12 @@ import { Octokit } from '@octokit/rest';
 import axios from 'axios';
 import * as pako from 'pako';
 
-const octokit = new Octokit({
+export const octokit: Octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-const GITHUB_OWNER = process.env.GITHUB_STORAGE_OWNER || 'duckyoo9';
-const GITHUB_REPO = process.env.GITHUB_STORAGE_REPO || 'fileduck-storage';
+export const GITHUB_OWNER = process.env.GITHUB_STORAGE_OWNER || 'duckyoo9';
+export const GITHUB_REPO = process.env.GITHUB_STORAGE_REPO || 'fileduck-storage';
 const CHUNK_SIZE = parseInt(process.env.GITHUB_CHUNK_SIZE || '1900000000'); // 1.9GB chunks (safe under 2GB)
 const ENABLE_COMPRESSION = process.env.GITHUB_ENABLE_COMPRESSION !== 'false'; // Enabled by default
 
@@ -22,11 +22,11 @@ function checkRateLimit(): boolean {
     uploadCount = 0;
     lastHourReset = now;
   }
-  
+
   if (uploadCount >= MAX_UPLOADS_PER_HOUR) {
     return false;
   }
-  
+
   uploadCount++;
   return true;
 }
@@ -67,7 +67,7 @@ export async function uploadToGitHub(
         // Use pako with maximum compression level (9)
         const compressed = Buffer.from(pako.deflate(fileBuffer, { level: 9 }));
         const compressionRatio = compressed.length / fileBuffer.length;
-        
+
         // Only use compression if it saves at least 5%
         if (compressionRatio < 0.95) {
           processedBuffer = compressed;
@@ -102,7 +102,7 @@ async function uploadSingleFile(
 ): Promise<{ downloadUrl: string; metadata: any }> {
   const tag = `file-${Date.now()}-${sha256.substring(0, 8)}`;
   const actualFilename = isCompressed ? `${filename}.gz` : filename;
-  
+
   const release = await octokit.repos.createRelease({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
@@ -124,12 +124,12 @@ async function uploadSingleFile(
       'content-length': fileBuffer.length,
     },
   });
-  
+
   // Verify the asset was uploaded
   if (!uploadResponse.data.browser_download_url) {
     throw new Error('GitHub asset upload failed - no download URL returned');
   }
-  
+
   console.log(`✓ Asset uploaded: ${uploadResponse.data.browser_download_url}`);
 
   return {
@@ -152,7 +152,7 @@ async function uploadChunkedFile(
 ): Promise<{ downloadUrl: string; metadata: any }> {
   const tag = `chunked-${Date.now()}-${sha256.substring(0, 8)}`;
   const totalChunks = Math.ceil(fileBuffer.length / CHUNK_SIZE);
-  
+
   console.log(`Uploading ${filename} in ${totalChunks} chunks`);
 
   const release = await octokit.repos.createRelease({
@@ -171,9 +171,9 @@ async function uploadChunkedFile(
     const start = i * CHUNK_SIZE;
     const end = Math.min(start + CHUNK_SIZE, fileBuffer.length);
     const chunk = fileBuffer.slice(start, end);
-    
+
     const chunkFilename = `${filename}.part${String(i + 1).padStart(3, '0')}${isCompressed ? '.gz' : ''}`;
-    
+
     console.log(`Uploading chunk ${i + 1}/${totalChunks}: ${chunkFilename}`);
 
     // Add delay between chunks to avoid rate limiting
@@ -217,7 +217,7 @@ export async function downloadFromGitHub(
         responseType: 'arraybuffer',
       });
       let buffer = Buffer.from(response.data);
-      
+
       // Decompress with pako if needed
       if (metadata.compressed) {
         console.log(`🗜️ Decompressing file (${buffer.length} bytes)`);
@@ -229,21 +229,21 @@ export async function downloadFromGitHub(
           throw new Error('Failed to decompress file');
         }
       }
-      
+
       return buffer;
     } else {
       // Multi-chunk download
       const chunks: Buffer[] = [];
-      
+
       for (const chunkUrl of metadata.chunkUrls) {
         const response = await axios.get(chunkUrl, {
           responseType: 'arraybuffer',
         });
         chunks.push(Buffer.from(response.data));
       }
-      
+
       let fullBuffer = Buffer.concat(chunks);
-      
+
       // Decompress with pako if needed
       if (metadata.compressed) {
         console.log(`🗜️ Decompressing chunked file (${fullBuffer.length} bytes)`);
@@ -255,7 +255,7 @@ export async function downloadFromGitHub(
           throw new Error('Failed to decompress file');
         }
       }
-      
+
       return fullBuffer;
     }
   } catch (error: any) {

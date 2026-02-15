@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router';
 import UploadView from '../views/UploadView.vue';
 import DownloadView from '../views/DownloadView.vue';
 import HistoryView from '../views/HistoryView.vue';
@@ -9,12 +9,18 @@ import TermsView from '../views/TermsView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
 import OfflineView from '../views/OfflineView.vue';
 import ErrorView from '../views/ErrorView.vue';
+import StatusView from '../views/StatusView.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Upload',
     component: UploadView,
+  },
+  {
+    path: '/status',
+    name: 'Status',
+    component: StatusView,
   },
   {
     path: '/download',
@@ -60,9 +66,9 @@ const routes = [
     path: '/error',
     name: 'Error',
     component: ErrorView,
-    props: route => ({ 
-      errorCode: route.params.errorCode || route.query.code,
-      errorDescription: route.params.errorDescription || route.query.message 
+    props: (route: RouteLocationNormalized) => ({
+      errorCode: (route.params.errorCode as string) || (route.query.code as string),
+      errorDescription: (route.params.errorDescription as string) || (route.query.message as string)
     }),
   },
   {

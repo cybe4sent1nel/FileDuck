@@ -17,10 +17,29 @@ app.use(express.json());
 // Configure multer for file uploads
 const upload = multer({ dest: '/tmp/' });
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_URL!,
-  token: process.env.UPSTASH_REDIS_TOKEN!,
-});
+// Initialize Upstash Redis with REST API (works on Vercel)
+let redis: Redis | null = null;
+
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    console.log('✓ Upstash Redis connected via REST API');
+  } else if (process.env.UPSTASH_REDIS_URL && process.env.UPSTASH_REDIS_TOKEN) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_URL,
+      token: process.env.UPSTASH_REDIS_TOKEN,
+    });
+    console.log('✓ Upstash Redis connected');
+  } else {
+    console.warn('⚠ Redis not configured - scan status updates will be skipped');
+  }
+} catch (error) {
+  console.error('❌ Redis initialization failed:', error);
+  redis = null;
+}
 
 const PORT = process.env.SCANNER_PORT || 4000;
 
@@ -55,7 +74,7 @@ app.post('/scan', upload.single('file'), async (req, res) => {
     return res.json(result);
   } catch (error: any) {
     console.error('Pre-upload scan error:', error);
-    
+
     // Cleanup temp file on error
     if (req.file) {
       await fs.unlink(req.file.path).catch(console.error);
@@ -113,7 +132,7 @@ app.post('/scan-s3', async (req, res) => {
     }
   } catch (error: any) {
     console.error('Scan error:', error);
-    
+
     // Update status to error
     if (req.body.shareCode) {
       await updateScanStatus(req.body.shareCode, 'error');
@@ -131,19 +150,21 @@ async function updateScanStatus(
   status: 'pending' | 'scanning' | 'clean' | 'infected' | 'error',
   newS3Key?: string
 ): Promise<void> {
+  const r = redis;
+  if (!r) return;
   try {
-    const data = await redis.get(shareCode);
+    const data = await r.get(shareCode);
     if (!data) return;
 
     const metadata = typeof data === 'string' ? JSON.parse(data) : data;
     metadata.scanStatus = status;
-    
+
     if (newS3Key) {
       metadata.s3Key = newS3Key;
     }
 
-    const ttl = await redis.ttl(shareCode);
-    await redis.setex(shareCode, ttl > 0 ? ttl : 86400, JSON.stringify(metadata));
+    const ttl = await r.ttl(shareCode);
+    await r.setex(shareCode, ttl > 0 ? ttl : 86400, JSON.stringify(metadata));
   } catch (error) {
     console.error('Failed to update scan status:', error);
   }
