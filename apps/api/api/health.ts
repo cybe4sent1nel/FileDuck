@@ -101,7 +101,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         clearTimeout(timeoutId);
 
-        if (!scannerResponse.ok) {
+        if (scannerResponse.ok) {
+          // Parse scanner response to check capabilities
+          const scannerData = await scannerResponse.json();
+          scannerStatus = scannerData.status || 'operational';
+        } else {
           scannerStatus = 'degraded';
         }
       } catch (e: any) {

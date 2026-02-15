@@ -43,9 +43,25 @@ try {
 
 const PORT = process.env.SCANNER_PORT || 4000;
 
-// Health check
+// Health check - shows scanner capabilities
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', service: 'malware-scanner' });
+  const useExternalClamAV = process.env.USE_EXTERNAL_CLAMAV === 'true';
+  const hasVirusTotal = !!process.env.VIRUSTOTAL_API_KEY;
+
+  // Scanner is operational if at least one scanning method is available
+  const isOperational = useExternalClamAV || hasVirusTotal;
+
+  res.json({
+    status: isOperational ? 'operational' : 'degraded',
+    service: 'malware-scanner',
+    capabilities: {
+      clamav: useExternalClamAV ? 'external-api' : 'disabled',
+      virustotal: hasVirusTotal ? 'enabled' : 'disabled',
+    },
+    message: isOperational
+      ? 'Scanner operational with ' + (useExternalClamAV && hasVirusTotal ? 'ClamAV + VirusTotal' : useExternalClamAV ? 'ClamAV only' : 'VirusTotal only')
+      : 'No scanning methods configured'
+  });
 });
 
 // Pre-upload scan endpoint (for files before they're uploaded to S3)
