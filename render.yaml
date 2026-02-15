@@ -51,11 +51,25 @@ services:
       - key: SCANNER_PORT
         value: 4000
       - key: SCANNER_URL
-        value: http://localhost:4000
+        value: http://127.0.0.1:4000/health
       - key: USE_CDN
         value: false
       - key: VITE_API_URL
         value: /api
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_STORAGE_OWNER
+        value: duckyoo9
+      - key: GITHUB_STORAGE_REPO
+        value: fileduck-storage
+      - key: GITHUB_CHUNK_SIZE
+        value: 1900000000
+      - key: GITHUB_ENABLE_COMPRESSION
+        value: true
+      - key: GITHUB_MAX_RELEASES_PER_HOUR
+        value: 10
+      - key: USE_GITHUB_STORAGE
+        value: true
     dockerfile: ./apps/api/Dockerfile
     dockerContext: ./
     autoDeploy: true
