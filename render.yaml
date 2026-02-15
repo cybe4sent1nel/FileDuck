@@ -70,6 +70,10 @@ services:
         value: 10
       - key: USE_GITHUB_STORAGE
         value: true
+      - key: USE_EXTERNAL_CLAMAV
+        value: false
+      - key: CLAMAV_API_URL
+        value: https://api.clamav.net/scan
     dockerfile: ./apps/api/Dockerfile
     dockerContext: ./
     autoDeploy: true

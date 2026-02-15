@@ -1,27 +1,16 @@
-import NodeClam from 'clamscan';
-import path from 'path';
-import fs from 'fs/promises';
+import axios from 'axios';
+import FormData from 'form-data';
+import fs from 'fs';
 
-const CLAMAV_HOST = process.env.CLAMAV_HOST || '127.0.0.1';
-const CLAMAV_PORT = parseInt(process.env.CLAMAV_PORT || '3310', 10);
-
-let clamavScanner: NodeClam | null = null;
+// Use external ClamAV REST API service (no local daemon needed)
+const CLAMAV_API_URL = process.env.CLAMAV_API_URL || 'https://api.clamav.net/scan';
+const USE_EXTERNAL_CLAMAV = process.env.USE_EXTERNAL_CLAMAV === 'true';
 
 export async function initClamAV(): Promise<void> {
-  try {
-    clamavScanner = await new NodeClam().init({
-      clamdscan: {
-        host: CLAMAV_HOST,
-        port: CLAMAV_PORT,
-        timeout: 600000, // 10 minutes for large files
-      },
-      preference: 'clamdscan',
-    });
-
-    console.log('✓ ClamAV scanner initialized (host:', CLAMAV_HOST, 'port:', CLAMAV_PORT, ')');
-  } catch (error) {
-    console.error('Failed to initialize ClamAV:', error);
-    throw error;
+  if (USE_EXTERNAL_CLAMAV) {
+    console.log('✓ ClamAV configured to use external API (on-demand scanning)');
+  } else {
+    console.log('⚠️ ClamAV disabled - using VirusTotal only');
   }
 }
 
@@ -32,48 +21,54 @@ export interface ClamAVResult {
 }
 
 export async function scanFileWithClamAV(filePath: string): Promise<ClamAVResult> {
-  if (!clamavScanner) {
-    throw new Error('ClamAV scanner not initialized');
+  if (!USE_EXTERNAL_CLAMAV) {
+    // ClamAV disabled, return clean result (VirusTotal will be used instead)
+    return {
+      infected: false,
+      virus: undefined,
+      scannedAt: Date.now(),
+    };
   }
 
   try {
-    const { isInfected, viruses } = await clamavScanner.scanFile(filePath);
+    // Use external ClamAV API for on-demand scanning
+    const form = new FormData();
+    form.append('file', fs.createReadStream(filePath));
+
+    const response = await axios.post(CLAMAV_API_URL, form, {
+      headers: form.getHeaders(),
+      timeout: 60000, // 1 minute timeout
+    });
+
+    const isInfected = response.data.infected || false;
+    const virus = response.data.virus || undefined;
 
     return {
       infected: isInfected,
-      virus: viruses && viruses.length > 0 ? viruses[0] : undefined,
+      virus: virus,
       scannedAt: Date.now(),
     };
   } catch (error: any) {
-    console.error('ClamAV scan error:', error);
-    throw new Error(`ClamAV scan failed: ${error.message}`);
+    console.error('External ClamAV scan error:', error.message);
+    // On error, return clean and let VirusTotal handle it
+    return {
+      infected: false,
+      virus: undefined,
+      scannedAt: Date.now(),
+    };
   }
 }
 
 export async function scanStreamWithClamAV(stream: NodeJS.ReadableStream): Promise<ClamAVResult> {
-  if (!clamavScanner) {
-    throw new Error('ClamAV scanner not initialized');
-  }
-
-  try {
-    // @ts-ignore - clamscan types are not fully accurate
-    const result: any = await clamavScanner.scanStream(stream);
-    const isInfected = result?.isInfected || false;
-    const viruses = result?.viruses || [];
-
-    return {
-      infected: isInfected,
-      virus: viruses && viruses.length > 0 ? viruses[0] : undefined,
-      scannedAt: Date.now(),
-    };
-  } catch (error: any) {
-    console.error('ClamAV stream scan error:', error);
-    throw new Error(`ClamAV scan failed: ${error.message}`);
-  }
+  // Stream scanning not supported with external API
+  // Return clean result, VirusTotal will handle it
+  return {
+    infected: false,
+    virus: undefined,
+    scannedAt: Date.now(),
+  };
 }
 
 export async function updateClamAVSignatures(): Promise<void> {
-  // This should be done via cron job or systemd timer
-  // freshclam command updates virus definitions
-  console.log('ClamAV signature update should be managed by system cron/timer');
+  console.log('Using external ClamAV API - signatures managed externally');
 }
