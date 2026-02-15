@@ -20,9 +20,9 @@ app.config.errorHandler = (err, instance, info) => {
   if (err instanceof Error && !err.message.includes('navigation')) {
     router.push({
       name: 'Error',
-      params: { 
+      params: {
         errorCode: '500',
-        errorDescription: err.message 
+        errorDescription: err.message
       }
     });
   }
@@ -131,10 +131,17 @@ setInterval(() => {
 const apiBase = import.meta.env.VITE_API_URL || '';
 
 async function checkConnectivity() {
+  // Only check if navigator says we are offline or every 60 seconds
+  if (navigator.onLine) {
+    // If we're online, we don't need to aggressively check
+    return;
+  }
+
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3000);
-    const healthUrl = apiBase ? `${apiBase}/health` : '/api/health';
+    // Fix: Ensure /api prefix is used
+    const healthUrl = apiBase ? `${apiBase}/api/health` : '/api/health';
 
     const response = await fetch(healthUrl, {
       method: 'GET',
@@ -144,18 +151,19 @@ async function checkConnectivity() {
 
     clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error(`Health check failed: ${response.status}`);
-    }
-
-    if (window.location.pathname === '/offline') {
-      router.replace('/');
+    if (response.ok) {
+      // If we were offline, reload to recover
+      if (window.location.pathname === '/offline') {
+        window.location.replace('/');
+      }
     }
   } catch {
-    if (window.location.pathname !== '/offline') {
-      window.location.replace('/offline');
-    }
+    // Still offline
   }
 }
 
-setInterval(checkConnectivity, 5000);
+// Check every 60 seconds (instead of 5s) to avoid rate limiting
+setInterval(checkConnectivity, 60000);
+
+// Also check immediately when online status changes
+window.addEventListener('online', checkConnectivity);
