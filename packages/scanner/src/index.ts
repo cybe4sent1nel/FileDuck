@@ -57,8 +57,14 @@ app.post('/scan', upload.single('file'), async (req, res) => {
 
     console.log(`Pre-upload scan for file: ${req.file.originalname}`);
 
-    // Scan with ClamAV
-    const clamavResult = await scanFileWithClamAV(req.file.path);
+    // Try to scan with ClamAV if available
+    let clamavResult;
+    try {
+      clamavResult = await scanFileWithClamAV(req.file.path);
+    } catch (error) {
+      console.warn('ClamAV scan failed, using VirusTotal only:', error instanceof Error ? error.message : error);
+      clamavResult = { infected: false, virus: null };
+    }
 
     // Cleanup temp file
     await fs.unlink(req.file.path).catch(console.error);
@@ -173,11 +179,17 @@ async function updateScanStatus(
 // Start server
 async function start() {
   try {
-    // Initialize ClamAV
-    await initScanner();
+    // Try to initialize ClamAV, but don't fail if it's not available
+    try {
+      await initScanner();
+      console.log('✓ Scanner initialized with ClamAV');
+    } catch (error) {
+      console.warn('⚠️ ClamAV not available, scanner will use VirusTotal only:', error instanceof Error ? error.message : error);
+      console.log('✓ Scanner running in VirusTotal-only mode');
+    }
 
     app.listen(PORT, () => {
-      console.log(`Scanner service running on port ${PORT}`);
+      console.log(`✓ Scanner service running on port ${PORT}`);
     });
   } catch (error) {
     console.error('Failed to start scanner:', error);

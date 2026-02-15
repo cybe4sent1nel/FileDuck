@@ -16,12 +16,12 @@
         <form @submit.prevent="submitReport" class="p-8 space-y-5">
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-            <select v-model="form.category" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none transition-all appearance-none bg-white">
-              <option value="bug">Bug Report</option>
-              <option value="ui">UI/UX Issue</option>
-              <option value="performance">Performance</option>
-              <option value="feature">Feature Request</option>
-              <option value="other">Other</option>
+            <select v-model="form.category" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none transition-all appearance-none bg-white text-gray-900">
+              <option value="bug" class="text-gray-900">Bug Report</option>
+              <option value="ui" class="text-gray-900">UI/UX Issue</option>
+              <option value="performance" class="text-gray-900">Performance</option>
+              <option value="feature" class="text-gray-900">Feature Request</option>
+              <option value="other" class="text-gray-900">Other</option>
             </select>
           </div>
 

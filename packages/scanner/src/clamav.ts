@@ -13,12 +13,12 @@ export async function initClamAV(): Promise<void> {
       clamdscan: {
         host: CLAMAV_HOST,
         port: CLAMAV_PORT,
-        timeout: 60000,
+        timeout: 600000, // 10 minutes for large files
       },
       preference: 'clamdscan',
     });
 
-    console.log('ClamAV scanner initialized');
+    console.log('✓ ClamAV scanner initialized (host:', CLAMAV_HOST, 'port:', CLAMAV_PORT, ')');
   } catch (error) {
     console.error('Failed to initialize ClamAV:', error);
     throw error;

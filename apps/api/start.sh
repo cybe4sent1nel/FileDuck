@@ -3,6 +3,15 @@ set -e
 
 echo "🚀 Starting FileDuck services..."
 
+# Start ClamAV daemon
+echo "🦠 Starting ClamAV daemon..."
+clamd &
+CLAMD_PID=$!
+
+# Wait for ClamAV to be ready
+echo "⏳ Waiting for ClamAV to initialize..."
+sleep 5
+
 # Start scanner service in background
 echo "📡 Starting scanner service on port 4000..."
 cd /app/packages/scanner
@@ -21,12 +30,12 @@ API_PID=$!
 # Function to handle shutdown
 shutdown() {
     echo "🛑 Shutting down services..."
-    kill $SCANNER_PID $API_PID 2>/dev/null || true
+    kill $SCANNER_PID $API_PID $CLAMD_PID 2>/dev/null || true
     exit 0
 }
 
 # Trap termination signals
 trap shutdown SIGTERM SIGINT
 
-# Wait for both processes
-wait $SCANNER_PID $API_PID
+# Wait for all processes
+wait $SCANNER_PID $API_PID $CLAMD_PID
