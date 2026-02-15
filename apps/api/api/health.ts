@@ -49,27 +49,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Check Redis connection
     await redis.ping();
 
-    // Check Storage (GitHub) connection with proper error handling
+    // Check Storage (GitHub) connection with caching to avoid rate limiting
     let storageStatus = 'unhealthy';
+    const CACHE_KEY = 'health:github:storage';
+    const CACHE_TTL = 300; // 5 minutes cache
+
     try {
-      // Verify GitHub token is configured
-      if (!process.env.GITHUB_TOKEN) {
-        console.error('GITHUB_TOKEN environment variable is not set!');
-        storageStatus = 'offline';
+      // Try to get cached status first
+      const cachedStatus = await redis.get(CACHE_KEY);
+
+      if (cachedStatus) {
+        storageStatus = cachedStatus as string;
+        console.log('Using cached GitHub storage status:', storageStatus);
       } else {
-        const repo = await octokit.repos.get({
-          owner: GITHUB_OWNER,
-          repo: GITHUB_REPO,
-        });
-        if (repo.status === 200) {
-          storageStatus = 'operational';
+        // Only check GitHub API if cache is empty
+        // Verify GitHub token is configured
+        if (!process.env.GITHUB_TOKEN) {
+          console.error('GITHUB_TOKEN environment variable is not set!');
+          storageStatus = 'offline';
+        } else {
+          const repo = await octokit.repos.get({
+            owner: GITHUB_OWNER,
+            repo: GITHUB_REPO,
+          });
+          if (repo.status === 200) {
+            storageStatus = 'operational';
+          }
         }
+
+        // Cache the result for 5 minutes
+        await redis.set(CACHE_KEY, storageStatus, { ex: CACHE_TTL });
       }
     } catch (e: any) {
       // Detect rate limiting vs other errors
       if (e.status === 403 && e.message?.includes('rate limit')) {
         console.warn('Storage health check: GitHub API rate limit exceeded');
         storageStatus = 'degraded'; // Still functional, just rate limited
+
+        // Cache degraded status for 5 minutes to avoid repeated rate limit hits
+        await redis.set(CACHE_KEY, 'degraded', { ex: CACHE_TTL });
       } else if (e.status === 401) {
         console.error('Storage health check: GitHub authentication failed - check GITHUB_TOKEN');
         storageStatus = 'offline';
