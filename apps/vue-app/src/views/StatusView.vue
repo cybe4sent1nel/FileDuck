@@ -546,28 +546,27 @@ const fetchHealth = async () => {
     const apiBase = import.meta.env.VITE_API_URL || '';
     const healthUrl = apiBase ? `${apiBase}/api/health` : '/api/health';
     
-    console.log('[Status Page] Fetching health from:', healthUrl);
-    console.log('[Status Page] VITE_API_URL:', import.meta.env.VITE_API_URL);
-    
+    // Log for debugging
+    console.log('[Status Page] Fetching:', healthUrl);
+
     const response = await fetch(healthUrl);
-    console.log('[Status Page] Response status:', response.status);
     
     if (response.ok) {
       const data = await response.json();
-      console.log('[Status Page] Health data:', data);
       healthData.value = data;
-      lastCheckTime.value = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      // Clear any previous errors
+      lastCheckTime.value = new Date().toLocaleTimeString();
     } else {
-      console.error('[Status Page] Health check failed with status:', response.status);
-      healthData.value.status = 'unhealthy';
-      healthData.value.services.api = 'unhealthy';
-      lastCheckTime.value = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      throw new Error(`Server returned ${response.status} ${response.statusText}`);
     }
-  } catch (error) {
-    console.error('[Status Page] Failed to fetch health:', error);
+  } catch (error: any) {
+    console.error('[Status Page] Fetch error:', error);
+    
+    // Show error in UI for easier debugging
     healthData.value.status = 'unhealthy';
     healthData.value.services.api = 'unhealthy';
-    lastCheckTime.value = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // Add validation error message to UI (you might need to add a field for this in the template or use console)
+    console.error('Connection failed to: ' + (import.meta.env.VITE_API_URL || 'local'));
   }
 };
 

@@ -9,17 +9,9 @@ config({ path: '../../.env' });
 const app: Express = express();
 const PORT = parseInt(process.env.PORT || process.env.API_PORT || '3001', 10);
 
-// Middleware - Configure CORS for Vercel/Netlify/Railway frontends
+// Middleware - Configure CORS
 app.use(cors({
-  origin: process.env.VERCEL ? '*' : [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://fileduck.vercel.app',
-    'https://fileduck.netlify.app',
-    /\.vercel\.app$/,
-    /\.netlify\.app$/,
-    /\.railway\.app$/
-  ],
+  origin: '*', // Allow all origins to fix connection issues
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
