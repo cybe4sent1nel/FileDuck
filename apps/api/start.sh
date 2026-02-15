@@ -8,9 +8,24 @@ echo "🦠 Starting ClamAV daemon..."
 clamd &
 CLAMD_PID=$!
 
-# Wait for ClamAV to be ready
-echo "⏳ Waiting for ClamAV to initialize..."
-sleep 5
+# Wait for ClamAV to be ready (check if port 3310 is listening)
+echo "⏳ Waiting for ClamAV to be ready..."
+MAX_WAIT=30
+WAITED=0
+while ! nc -z 127.0.0.1 3310 2>/dev/null; do
+    if [ $WAITED -ge $MAX_WAIT ]; then
+        echo "⚠️ ClamAV failed to start after ${MAX_WAIT}s, scanner will use VirusTotal only"
+        break
+    fi
+    sleep 1
+    WAITED=$((WAITED + 1))
+done
+
+if nc -z 127.0.0.1 3310 2>/dev/null; then
+    echo "✓ ClamAV daemon ready on port 3310"
+else
+    echo "⚠️ ClamAV not available, continuing without it"
+fi
 
 # Start scanner service in background
 echo "📡 Starting scanner service on port 4000..."

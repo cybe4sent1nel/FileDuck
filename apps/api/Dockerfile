@@ -7,6 +7,7 @@ RUN apk add --no-cache \
     clamav \
     clamav-daemon \
     clamav-libunrar \
+    netcat-openbsd \
     && mkdir -p /var/log/clamav /var/lib/clamav /var/run/clamav \
     && chown -R clamav:clamav /var/log/clamav /var/lib/clamav /var/run/clamav
 
