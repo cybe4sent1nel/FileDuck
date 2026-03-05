@@ -48,6 +48,16 @@ tmpclaude-*-cwd
 # Deployment Scripts (local use only)
 deploy-*.sh
 deploy-*.ps1
+deploy.bat
+
+# Temporary/Local files only (root level)
+/*.png
+/*.svg
+/*.bin
+part.bin
+
+# Turborepo
+.turbo/
 deploy-*.bat
 setup.sh
 setup.bat

@@ -13,6 +13,17 @@
 
 [Features](#-features) • [Architecture](#️-architecture) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
 
+## 🎥 Demo Video
+
+<div>
+    <a href="https://www.loom.com/share/f384f76a1d6b400088f63bdedddd65e6">
+      <p>FileDuck FINAL - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/f384f76a1d6b400088f63bdedddd65e6">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/f384f76a1d6b400088f63bdedddd65e6-4bba088908e18735-full-play.gif#t=0.1">
+    </a>
+  </div>
+
 </div>
 
 ---
