@@ -22,8 +22,8 @@
         </svg>
 
         <!-- Verification Badge (bottom right of avatar) -->
-        <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">
-          <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <div class="absolute bottom-0 right-0 w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+          <svg class="w-4 h-4 text-white font-bold" fill="currentColor" viewBox="0 0 24 24">
             <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
           </svg>
         </div>

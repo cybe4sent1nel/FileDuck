@@ -1,5 +1,6 @@
 <template>
-  <div class="py-20 bg-white">
+  <div class="w-full bg-white py-20">
+    <!-- Header Section -->
     <div class="container mx-auto px-4 mb-16">
       <div class="text-center">
         <div class="flex justify-center mb-6">
@@ -19,62 +20,75 @@
       </div>
     </div>
 
-    <div class="overflow-hidden">
-      <!-- Row 1: Cards 1-4 scrolling left to right -->
-      <div class="relative">
-        <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-        <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-        
-        <div class="flex gap-6 animate-marquee px-4 py-8">
-          <TestimonialCard v-for="card in cardsData.slice(0, 4)" :key="`row1-${card.name}`" :card="card" />
-          <TestimonialCard v-for="card in cardsData.slice(0, 4)" :key="`row1-dup-${card.name}`" :card="card" />
-          <TestimonialCard v-for="card in cardsData.slice(0, 4)" :key="`row1-dup2-${card.name}`" :card="card" />
+    <!-- FULLWIDTH Carousel Section -->
+    <div class="w-screen relative mb-12">
+      <!-- Left Fade -->
+      <div class="absolute left-0 top-0 h-full w-40 bg-gradient-to-r from-white via-white to-transparent z-20 pointer-events-none"></div>
+      <!-- Right Fade -->
+      <div class="absolute right-0 top-0 h-full w-40 bg-gradient-to-l from-white via-white to-transparent z-20 pointer-events-none"></div>
+      
+      <!-- Row 1: Scrolling Left -->
+      <div class="overflow-hidden">
+        <div class="carousel-row">
+          <TestimonialCard v-for="(card, idx) in cardsRow1Repeated" :key="`r1-${idx}`" :card="card" />
         </div>
       </div>
+    </div>
 
-      <!-- Row 2: Cards 5-8 scrolling right to left -->
-      <div class="relative">
-        <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-        <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-        
-        <div class="flex gap-6 animate-marquee-reverse px-4 py-8">
-          <TestimonialCard v-for="card in cardsData.slice(4, 8)" :key="`row2-${card.name}`" :card="card" />
-          <TestimonialCard v-for="card in cardsData.slice(4, 8)" :key="`row2-dup-${card.name}`" :card="card" />
-          <TestimonialCard v-for="card in cardsData.slice(4, 8)" :key="`row2-dup2-${card.name}`" :card="card" />
+    <!-- FULLWIDTH Carousel Section Row 2 -->
+    <div class="w-screen relative">
+      <!-- Left Fade -->
+      <div class="absolute left-0 top-0 h-full w-40 bg-gradient-to-r from-white via-white to-transparent z-20 pointer-events-none"></div>
+      <!-- Right Fade -->
+      <div class="absolute right-0 top-0 h-full w-40 bg-gradient-to-l from-white via-white to-transparent z-20 pointer-events-none"></div>
+      
+      <!-- Row 2: Scrolling Right -->
+      <div class="overflow-hidden">
+        <div class="carousel-row carousel-row-reverse">
+          <TestimonialCard v-for="(card, idx) in cardsRow2Repeated" :key="`r2-${idx}`" :card="card" />
         </div>
       </div>
     </div>
 
     <style scoped>
-      @keyframes marquee {
-        0% {
-          transform: translateX(0);
-        }
-        100% {
-          transform: translateX(-33.333%);
-        }
+      .carousel-row {
+        display: flex;
+        gap: 1.5rem;
+        padding: 2rem 0;
+        width: fit-content;
+        animation: scrollLeft 70s linear infinite;
+        animation-play-state: running;
       }
 
-      @keyframes marquee-reverse {
-        0% {
-          transform: translateX(-33.333%);
-        }
-        100% {
-          transform: translateX(0);
-        }
-      }
-
-      .animate-marquee {
-        animation: marquee 60s linear infinite;
-      }
-
-      .animate-marquee-reverse {
-        animation: marquee-reverse 60s linear infinite;
-      }
-
-      .animate-marquee:hover,
-      .animate-marquee-reverse:hover {
+      .carousel-row:hover {
         animation-play-state: paused;
+      }
+
+      .carousel-row-reverse {
+        animation: scrollRight 70s linear infinite;
+        animation-play-state: running;
+      }
+
+      .carousel-row-reverse:hover {
+        animation-play-state: paused;
+      }
+
+      @keyframes scrollLeft {
+        0% {
+          transform: translateX(0px);
+        }
+        100% {
+          transform: translateX(calc(-320px * 4 - 1.5rem * 4));
+        }
+      }
+
+      @keyframes scrollRight {
+        0% {
+          transform: translateX(calc(-320px * 4 - 1.5rem * 4));
+        }
+        100% {
+          transform: translateX(0px);
+        }
       }
     </style>
   </div>
@@ -82,7 +96,7 @@
 
 <script setup lang="ts">
 import { Vue3Lottie } from 'vue3-lottie';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import TestimonialCard from './TestimonialCard.vue';
 import DuckLoveAnimation from '../../../../animations/Duck love.json';
 
@@ -151,5 +165,20 @@ const cardsData = ref<Testimonial[]>([
     profession: 'Creative Director',
     review: 'In a world of bloated file sharing apps, FileDuck is refreshingly minimal yet powerful. Our entire creative team switched last month and hasn\'t looked back.'
   }
+]);
+
+// Repeat cards for seamless scrolling
+const cardsRow1Repeated = computed(() => [
+  ...cardsData.value.slice(0, 4),
+  ...cardsData.value.slice(0, 4),
+  ...cardsData.value.slice(0, 4),
+  ...cardsData.value.slice(0, 4)
+]);
+
+const cardsRow2Repeated = computed(() => [
+  ...cardsData.value.slice(4, 8),
+  ...cardsData.value.slice(4, 8),
+  ...cardsData.value.slice(4, 8),
+  ...cardsData.value.slice(4, 8)
 ]);
 </script>
