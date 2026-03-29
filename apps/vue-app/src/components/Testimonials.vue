@@ -1,5 +1,5 @@
 <template>
-  <div class="py-20">
+  <div class="py-20 w-full bg-white">
     <div class="container mx-auto px-4 mb-16">
       <div class="text-center">
         <!-- Duck Love Animation -->
@@ -21,86 +21,83 @@
       </div>
     </div>
 
-    <!-- Marquee Container -->
     <style scoped>
-      @keyframes marqueeScroll {
-        0% { 
-          transform: translateX(0); 
+      @keyframes scrollLeft {
+        0% {
+          left: 0;
         }
-        100% { 
-          transform: translateX(calc(-288px * 4 - 24px * 3));
+        100% {
+          left: -100%;
         }
       }
 
-      .marquee-row {
-        width: 100vw;
-        position: relative;
-        margin-left: calc(-50vw + 50%);
+      @keyframes scrollRight {
+        0% {
+          right: 0;
+        }
+        100% {
+          right: -100%;
+        }
+      }
+
+      .carousel-wrapper {
+        width: 100%;
         overflow: hidden;
+        position: relative;
+        margin: 0;
       }
 
-      .marquee-inner {
+      .carousel-track {
         display: flex;
         gap: 1.5rem;
-        padding-top: 2.5rem;
-        padding-bottom: 1.25rem;
-        width: fit-content;
-        min-width: calc(288px * 4 * 2);
-        animation: marqueeScroll 45s linear infinite;
-        will-change: transform;
-        transform: translateZ(0);
-        backface-visibility: hidden;
+        animation: scrollLeft 50s linear infinite;
+        padding: 2rem 0;
       }
 
-      .marquee-reverse {
-        animation-direction: reverse;
+      .carousel-track.reverse {
+        animation: scrollRight 50s linear infinite;
       }
 
-      .marquee-inner:hover {
+      .carousel-track:hover {
         animation-play-state: paused;
       }
 
-      .gradient-left {
+      .carousel-fade {
         position: absolute;
-        left: 0;
         top: 0;
         height: 100%;
-        width: 6rem;
-        z-index: 10;
+        width: 10%;
         pointer-events: none;
-        background: linear-gradient(to right, white, white, transparent);
+        z-index: 20;
       }
 
-      .gradient-right {
-        position: absolute;
+      .carousel-fade.left {
+        left: 0;
+        background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+      }
+
+      .carousel-fade.right {
         right: 0;
-        top: 0;
-        height: 100%;
-        width: 6rem;
-        z-index: 10;
-        pointer-events: none;
-        background: linear-gradient(to left, white, white, transparent);
+        background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
       }
     </style>
 
-    <!-- First Row -->
-    <div class="marquee-row mb-8">
-      <div class="gradient-left"></div>
-      <div class="marquee-inner">
-        <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-${index}`" :card="card" />
-        <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-repeat-${index}`" :card="card" />
+    <!-- First Row - Left to Right -->
+    <div class="carousel-wrapper mb-12">
+      <div class="carousel-fade left"></div>
+      <div class="carousel-track">
+        <TestimonialCard v-for="(card, index) in [...cardsData.slice(0, 4), ...cardsData.slice(0, 4)]" :key="`row1-${index}`" :card="card" />
       </div>
-      <div class="gradient-right"></div>
+      <div class="carousel-fade right"></div>
     </div>
 
-    <!-- Second Row (Reverse) -->
-    <div class="marquee-row">
-      <div class="gradient-left"></div>
-      <div class="marquee-inner marquee-reverse">
-        <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-${index}`" :card="card" />
-        <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-repeat-${index}`" :card="card" />
+    <!-- Second Row - Right to Left -->
+    <div class="carousel-wrapper">
+      <div class="carousel-fade left"></div>
+      <div class="carousel-track reverse">
+        <TestimonialCard v-for="(card, index) in [...cardsData.slice(4, 8), ...cardsData.slice(4, 8)]" :key="`row2-${index}`" :card="card" />
       </div>
-      <div class="gradient-right"></div>
+      <div class="carousel-fade right"></div>
     </div>
   </div>
 </template>
