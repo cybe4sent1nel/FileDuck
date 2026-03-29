@@ -231,3 +231,4 @@ netlify deploy --prod --dir=apps/vue-app/dist
 | Variable | Value | Required |
 |----------|-------|----------|
 | `VITE_API_URL` | `https://fileduck-api.onrender.com` | ✅ Yes |
+

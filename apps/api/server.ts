@@ -189,3 +189,4 @@ if (!process.env.VERCEL) {
 
 // Export for Vercel serverless
 export default app;
+

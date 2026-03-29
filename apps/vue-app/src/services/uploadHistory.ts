@@ -384,3 +384,4 @@ export function calculateExpirationTime(ttlHours?: number): number {
   const enforcedHours = enforceMaxTTL(hours);
   return Date.now() + (enforcedHours * 60 * 60 * 1000);
 }
+

@@ -35,3 +35,4 @@ interface Window {
     getResponse: (widgetId: string) => string;
   };
 }
+

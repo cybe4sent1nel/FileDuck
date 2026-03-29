@@ -279,3 +279,4 @@ export async function deleteFromGitHub(releaseId: number): Promise<void> {
     throw new Error(`Failed to delete from GitHub: ${error.message}`);
   }
 }
+

@@ -142,3 +142,4 @@ async function pollAnalysis(
   console.warn('VirusTotal scan timed out');
   return null;
 }
+

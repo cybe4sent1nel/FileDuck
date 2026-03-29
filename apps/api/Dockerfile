@@ -27,3 +27,4 @@ EXPOSE 3001 4000
 
 # Start both services
 CMD ["/app/start.sh"]
+

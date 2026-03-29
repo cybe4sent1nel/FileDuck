@@ -75,3 +75,4 @@ export async function initScanner(): Promise<void> {
   await initClamAV();
   console.log('Scanner ready');
 }
+

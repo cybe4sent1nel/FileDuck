@@ -52,3 +52,4 @@ export async function deleteFromQuarantine(key: string): Promise<void> {
 
   await s3Client.send(command);
 }
+

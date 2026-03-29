@@ -96,3 +96,4 @@ fly.toml
 
 # Test artifacts
 **/test-*-screenshot.png
+

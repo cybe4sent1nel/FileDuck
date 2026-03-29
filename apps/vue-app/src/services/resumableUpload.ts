@@ -143,3 +143,4 @@ export function setUploadPaused(fileHash: string, paused: boolean): void {
   state.isPaused = paused;
   saveResumableUploadState(fileHash, state);
 }
+

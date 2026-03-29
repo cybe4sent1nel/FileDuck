@@ -57,3 +57,4 @@ try {
   console.error('✗ Error reading sw.js:', err.message);
   process.exit(1);
 }
+

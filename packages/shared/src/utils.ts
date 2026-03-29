@@ -94,3 +94,4 @@ export const CONSTANTS = {
   RATE_LIMIT_MAX: 10,
   CAPTCHA_THRESHOLD: 3, // Failed attempts before CAPTCHA
 } as const;
+

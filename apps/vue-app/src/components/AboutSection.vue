@@ -68,3 +68,4 @@ import { Vue3Lottie } from 'vue3-lottie';
 import { ShieldCheckIcon, ZapIcon, EyeOffIcon } from 'lucide-vue-next';
 import EarthAnimation from '../../../../animations/Earth globe rotating with Seamless loop animation.json';
 </script>
+

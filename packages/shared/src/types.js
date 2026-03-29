@@ -22,3 +22,4 @@ var ErrorCode;
     ErrorCode["INVALID_REQUEST"] = "INVALID_REQUEST";
     ErrorCode["SERVER_ERROR"] = "SERVER_ERROR";
 })(ErrorCode || (exports.ErrorCode = ErrorCode = {}));
+

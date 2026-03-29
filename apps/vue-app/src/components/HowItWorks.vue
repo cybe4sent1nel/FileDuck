@@ -161,3 +161,4 @@ import VerifyAnimation from '../../../../animations/Verify Code.json';
   animation: float 3s ease-in-out infinite;
 }
 </style>
+

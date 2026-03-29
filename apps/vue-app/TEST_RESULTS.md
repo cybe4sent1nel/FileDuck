@@ -107,3 +107,4 @@ The automated test script (`test-offline.js`) successfully:
 - ✓ Reports detailed results
 
 The test script is ready to use once the SW registration issue is fixed.
+

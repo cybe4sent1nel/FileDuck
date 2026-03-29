@@ -31,3 +31,4 @@ done
 
 echo "Starting scanner service..."
 node dist/index.js
+

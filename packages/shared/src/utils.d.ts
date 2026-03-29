@@ -19,3 +19,4 @@ export declare const CONSTANTS: {
     readonly RATE_LIMIT_MAX: 10;
     readonly CAPTCHA_THRESHOLD: 3;
 };
+

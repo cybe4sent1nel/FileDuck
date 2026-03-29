@@ -30,3 +30,4 @@ trap shutdown SIGTERM SIGINT
 
 # Wait for both processes
 wait $SCANNER_PID $API_PID
+

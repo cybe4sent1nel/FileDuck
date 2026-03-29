@@ -242,3 +242,4 @@ export async function getAllKeys(pattern: string = '*'): Promise<string[]> {
 }
 
 export default redis;
+

@@ -81,3 +81,4 @@ To trigger a deployment from the command line, use Render's API or dashboard rer
 - Verify environment variables are set
 - Ensure `pnpm install` completes without errors
 - Verify TypeScript builds correctly: `pnpm run build:backend`
+

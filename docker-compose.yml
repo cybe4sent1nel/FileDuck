@@ -83,3 +83,4 @@ volumes:
   clamav-data:
   minio-data:
   redis-data:
+

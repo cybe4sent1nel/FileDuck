@@ -471,3 +471,4 @@ const scrollToUpload = () => {
   50% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.15); }
 }
 </style>
+

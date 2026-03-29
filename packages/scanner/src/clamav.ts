@@ -72,3 +72,4 @@ export async function scanStreamWithClamAV(stream: NodeJS.ReadableStream): Promi
 export async function updateClamAVSignatures(): Promise<void> {
   console.log('Using external ClamAV API - signatures managed externally');
 }
+

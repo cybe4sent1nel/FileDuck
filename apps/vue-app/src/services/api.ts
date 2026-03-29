@@ -188,3 +188,4 @@ export async function getFileMetadata(shareCode: string): Promise<FileMetadata> 
   const response = await api.post('/get-metadata', { shareCode });
   return response.data;
 }
+

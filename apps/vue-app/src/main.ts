@@ -173,3 +173,4 @@ setInterval(checkConnectivity, 60000);
 
 // Also check immediately when online status changes
 window.addEventListener('online', checkConnectivity);
+

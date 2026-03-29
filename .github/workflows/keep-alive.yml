@@ -11,3 +11,4 @@ jobs:
       - name: Ping Render Backend
         run: |
           curl -s https://fileduck-api.onrender.com/api/health
+

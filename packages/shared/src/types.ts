@@ -101,3 +101,4 @@ export interface RateLimitInfo {
   resetAt: number;
   captchaRequired: boolean;
 }
+

@@ -182,3 +182,4 @@ self.addEventListener('message', (event) => {
     );
   }
 });
+

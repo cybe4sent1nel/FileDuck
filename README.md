@@ -539,3 +539,4 @@ MIT License - see [LICENSE](LICENSE)
 **⭐ Star us on GitHub if you find FileDuck useful!**
 
 </div>
+

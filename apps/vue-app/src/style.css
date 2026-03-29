@@ -407,3 +407,4 @@ button .lottie, button img, button svg,
 [class*="hover:scale"], [class*="hover:transform"] {
   cursor: url('/cursor-pointer.svg') 8 8, pointer !important;
 }
+

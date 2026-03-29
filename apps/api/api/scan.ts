@@ -468,3 +468,4 @@ async function pollMetaDefenderResults(dataId: string, timeoutMs: number = 60000
   console.warn('MetaDefender scan timeout');
   return null;
 }
+

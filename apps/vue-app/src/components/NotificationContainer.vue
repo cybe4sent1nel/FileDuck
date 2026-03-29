@@ -122,3 +122,4 @@ const getIconColor = (type: NotificationType): string => {
   transform: translateX(100px) scale(0.8);
 }
 </style>
+

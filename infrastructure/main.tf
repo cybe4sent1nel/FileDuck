@@ -270,3 +270,4 @@ output "api_secret_access_key" {
 output "sns_topic_arn" {
   value = aws_sns_topic.malware_alerts.arn
 }
+

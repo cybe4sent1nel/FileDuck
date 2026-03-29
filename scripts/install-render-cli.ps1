@@ -17,3 +17,4 @@ Write-Host "If the automated install failed, install Render CLI manually:"
 Write-Host "  1) Follow instructions: https://render.com/docs/deploying#using-the-render-cli"
 Write-Host "  2) On Windows you can use npm or WSL. Example (PowerShell as Admin):"
 Write-Host "     npm install -g @render/cli"
+

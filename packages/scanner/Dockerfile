@@ -46,3 +46,4 @@ WORKDIR /app/packages/scanner
 EXPOSE 4000
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
