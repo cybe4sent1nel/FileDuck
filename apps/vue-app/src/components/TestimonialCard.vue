@@ -1,63 +1,69 @@
 <template>
-  <div class="p-4 rounded-lg mx-2 shadow hover:shadow-lg transition-all duration-200 w-72 shrink-0 bg-white border border-purple-100">
-    <div class="flex gap-3 mb-4">
-      <div class="relative">
+  <div class="flex-shrink-0 w-80 bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+    <!-- Profile Section -->
+    <div class="flex items-start gap-4 mb-4">
+      <div class="relative flex-shrink-0">
+        <!-- Profile Image -->
         <img 
+          v-if="!imageError"
           :src="card.image" 
           :alt="`${card.name} profile`"
-          class="size-12 rounded-full object-cover"
+          class="w-16 h-16 rounded-full object-cover"
           @error="handleImageError"
-          v-if="!imageError"
         />
-        <!-- Fallback SVG for broken images -->
+        <!-- Fallback Avatar -->
         <svg 
           v-else
-          class="size-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white p-2"
+          class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white"
           fill="currentColor"
           viewBox="0 0 24 24"
         >
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
         </svg>
-      </div>
-      <div class="flex flex-col justify-center">
-        <div class="flex items-center gap-2">
-          <p class="font-semibold text-gray-900">{{ card.name }}</p>
-          <!-- Verification Badge -->
-          <div class="inline-flex items-center justify-center flex-shrink-0">
-            <!-- Blue circle background -->
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="11" fill="#3B82F6" stroke="none"/>
-            </svg>
-            <!-- White checkmark overlay -->
-            <svg class="w-4 h-4 -ml-4" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
-            </svg>
-          </div>
+
+        <!-- Verification Badge (bottom right of avatar) -->
+        <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">
+          <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+          </svg>
         </div>
-        <span class="text-xs text-slate-500">{{ card.handle }}</span>
-        <span class="text-xs text-slate-400">{{ card.profession }}</span>
+      </div>
+
+      <!-- Profile Info -->
+      <div class="flex-1">
+        <h3 class="font-semibold text-gray-900 text-base">{{ card.name }}</h3>
+        <p class="text-sm text-gray-500">{{ card.handle }}</p>
+        <p class="text-xs text-gray-400">{{ card.profession }}</p>
       </div>
     </div>
 
     <!-- Star Rating -->
-    <div class="flex gap-0.5 mb-3">
-      <svg v-for="i in 5" :key="i" class="w-3.5 h-3.5 fill-yellow-400" viewBox="0 0 24 24">
+    <div class="flex gap-1 mb-3">
+      <svg v-for="i in 5" :key="i" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
       </svg>
     </div>
 
     <!-- Review Text -->
-    <p class="text-sm text-gray-700 leading-relaxed line-clamp-4">
+    <p class="text-sm text-gray-700 leading-relaxed">
       "{{ card.review }}"
     </p>
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends { image: string; name: string; handle: string; review: string; profession: string }">
+<script setup lang="ts">
 import { ref } from 'vue';
 
+interface Testimonial {
+  image: string;
+  name: string;
+  handle: string;
+  profession: string;
+  review: string;
+}
+
 interface Props {
-  card: T;
+  card: Testimonial;
 }
 
 defineProps<Props>();
@@ -68,13 +74,4 @@ const handleImageError = () => {
   imageError.value = true;
 };
 </script>
-
-<style scoped>
-.line-clamp-4 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
-</style>
 
