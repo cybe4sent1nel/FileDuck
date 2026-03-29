@@ -153,31 +153,6 @@ const cardsData = ref<Testimonial[]>([
   }
 ]);
 </script>
-
-<script setup lang="ts">
-import { Vue3Lottie } from 'vue3-lottie';
-import { ref } from 'vue';
-import TestimonialCard from './TestimonialCard.vue';
-import DuckLoveAnimation from '../../../../animations/Duck love.json';
-
-interface Testimonial {
-  image: string;
-  name: string;
-  handle: string;
-  review: string;
-  profession: string;
-}
-
-const cardsData = ref<Testimonial[]>([
-  {
-    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&h=200&fit=crop',
-    name: 'Marcus Chen',
-    handle: '@marcuschen_dev',
-    profession: 'Software Engineer',
-    review: 'FileDuck transformed how our team shares large project files. The security features give us confidence, and the speed is unmatched in the industry.'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&h=200&fit=crop',
     name: 'Elena Rodriguez',
     handle: '@elenards',
     profession: 'Product Manager',
