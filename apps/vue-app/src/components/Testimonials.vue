@@ -1,6 +1,6 @@
 <template>
   <div class="py-20 my-16">
-    <div class="container mx-auto px-4">
+    <div class="w-full">
       <div class="text-center mb-16">
         <!-- Duck Love Animation -->
         <div class="flex justify-center mb-6">
@@ -28,7 +28,7 @@
         }
 
         .marquee-inner {
-          animation: marqueeScroll 30s linear infinite;
+          animation: marqueeScroll 40s linear infinite;
         }
 
         .marquee-reverse {
@@ -41,21 +41,23 @@
       </style>
 
       <!-- First Row -->
-      <div class="marquee-row w-full mx-auto max-w-6xl overflow-hidden relative mb-8">
+      <div class="w-full overflow-hidden relative mb-8">
         <div class="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white via-white to-transparent"></div>
         <div class="marquee-inner flex transform-gpu min-w-max pt-10 pb-5 gap-6">
           <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-${index}`" :card="card" />
           <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-repeat-${index}`" :card="card" />
+          <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-repeat2-${index}`" :card="card" />
         </div>
         <div class="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white via-white to-transparent"></div>
       </div>
 
       <!-- Second Row (Reverse) -->
-      <div class="marquee-row w-full mx-auto max-w-6xl overflow-hidden relative">
+      <div class="w-full overflow-hidden relative">
         <div class="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white via-white to-transparent"></div>
         <div class="marquee-inner marquee-reverse flex transform-gpu min-w-max pt-10 pb-5 gap-6">
           <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-${index}`" :card="card" />
           <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-repeat-${index}`" :card="card" />
+          <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-repeat2-${index}`" :card="card" />
         </div>
         <div class="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white via-white to-transparent"></div>
       </div>
