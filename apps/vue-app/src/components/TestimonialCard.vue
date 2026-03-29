@@ -20,15 +20,15 @@
         </svg>
       </div>
       <div class="flex flex-col justify-center">
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
           <p class="font-semibold text-gray-900">{{ card.name }}</p>
           <!-- Verification Badge with Checkmark -->
-          <div class="relative inline-flex items-center justify-center">
-            <svg class="w-4 h-4 fill-blue-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="11" fill="currentColor" />
+          <div class="relative inline-flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 fill-blue-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="12" fill="currentColor" />
             </svg>
-            <svg class="w-3 h-3 absolute fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+            <svg class="w-3 h-3 absolute text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <path d="M9 16.1708L4.70711 11.8779L3.29289 13.2921L9 19L21 7.12132L19.5858 5.70711L9 16.1708Z" />
             </svg>
           </div>
         </div>

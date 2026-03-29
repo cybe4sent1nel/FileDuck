@@ -24,13 +24,32 @@
     <!-- Marquee Container -->
     <style scoped>
       @keyframes marqueeScroll {
-        0% { transform: translateX(0%); }
-        100% { transform: translateX(-50%); }
+        0% { 
+          transform: translateX(0); 
+        }
+        100% { 
+          transform: translateX(calc(-288px * 4 - 24px * 3));
+        }
+      }
+
+      .marquee-row {
+        width: 100vw;
+        position: relative;
+        margin-left: calc(-50vw + 50%);
+        overflow: hidden;
       }
 
       .marquee-inner {
-        animation: marqueeScroll 40s linear infinite;
+        display: flex;
+        gap: 1.5rem;
+        padding-top: 2.5rem;
+        padding-bottom: 1.25rem;
+        width: fit-content;
+        min-width: calc(288px * 4 * 2);
+        animation: marqueeScroll 45s linear infinite;
         will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
       }
 
       .marquee-reverse {
@@ -40,28 +59,48 @@
       .marquee-inner:hover {
         animation-play-state: paused;
       }
+
+      .gradient-left {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 6rem;
+        z-index: 10;
+        pointer-events: none;
+        background: linear-gradient(to right, white, white, transparent);
+      }
+
+      .gradient-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 6rem;
+        z-index: 10;
+        pointer-events: none;
+        background: linear-gradient(to left, white, white, transparent);
+      }
     </style>
 
     <!-- First Row -->
-    <div class="marquee-row w-screen overflow-hidden relative mb-8">
-      <div class="absolute left-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-r from-white via-white to-transparent"></div>
-      <div class="marquee-inner flex gap-6 pt-10 pb-5">
+    <div class="marquee-row mb-8">
+      <div class="gradient-left"></div>
+      <div class="marquee-inner">
         <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-${index}`" :card="card" />
         <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-repeat-${index}`" :card="card" />
-        <TestimonialCard v-for="(card, index) in cardsData.slice(0, 4)" :key="`row1-repeat2-${index}`" :card="card" />
       </div>
-      <div class="absolute right-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-l from-white via-white to-transparent"></div>
+      <div class="gradient-right"></div>
     </div>
 
     <!-- Second Row (Reverse) -->
-    <div class="marquee-row w-screen overflow-hidden relative">
-      <div class="absolute left-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-r from-white via-white to-transparent"></div>
-      <div class="marquee-inner marquee-reverse flex gap-6 pt-10 pb-5">
+    <div class="marquee-row">
+      <div class="gradient-left"></div>
+      <div class="marquee-inner marquee-reverse">
         <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-${index}`" :card="card" />
         <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-repeat-${index}`" :card="card" />
-        <TestimonialCard v-for="(card, index) in cardsData.slice(4, 8)" :key="`row2-repeat2-${index}`" :card="card" />
       </div>
-      <div class="absolute right-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-l from-white via-white to-transparent"></div>
+      <div class="gradient-right"></div>
     </div>
   </div>
 </template>
