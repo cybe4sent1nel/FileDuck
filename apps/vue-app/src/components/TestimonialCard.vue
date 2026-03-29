@@ -22,10 +22,15 @@
       <div class="flex flex-col justify-center">
         <div class="flex items-center gap-1">
           <p class="font-semibold text-gray-900">{{ card.name }}</p>
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" fill="#3b82f6" />
-            <path d="M8 12.5L10.5 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
+          <!-- Verification Badge with Checkmark -->
+          <div class="relative inline-flex items-center justify-center">
+            <svg class="w-4 h-4 fill-blue-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="11" fill="currentColor" />
+            </svg>
+            <svg class="w-3 h-3 absolute fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+            </svg>
+          </div>
         </div>
         <span class="text-xs text-slate-500">{{ card.handle }}</span>
         <span class="text-xs text-slate-400">{{ card.profession }}</span>
