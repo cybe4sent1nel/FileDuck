@@ -21,32 +21,28 @@
     </div>
 
     <!-- FULLWIDTH Carousel Section -->
-    <div class="w-screen relative mb-12">
+    <div class="relative mb-12 overflow-x-clip">
       <!-- Left Fade -->
       <div class="absolute left-0 top-0 h-full w-40 bg-gradient-to-r from-white via-white to-transparent z-20 pointer-events-none"></div>
       <!-- Right Fade -->
       <div class="absolute right-0 top-0 h-full w-40 bg-gradient-to-l from-white via-white to-transparent z-20 pointer-events-none"></div>
       
       <!-- Row 1: Scrolling Left -->
-      <div class="overflow-hidden">
-        <div class="carousel-row">
-          <TestimonialCard v-for="(card, idx) in cardsRow1Repeated" :key="`r1-${idx}`" :card="card" />
-        </div>
+      <div class="carousel-row">
+        <TestimonialCard v-for="(card, idx) in cardsRow1Repeated" :key="`r1-${idx}`" :card="card" />
       </div>
     </div>
 
     <!-- FULLWIDTH Carousel Section Row 2 -->
-    <div class="w-screen relative">
+    <div class="relative overflow-x-clip">
       <!-- Left Fade -->
       <div class="absolute left-0 top-0 h-full w-40 bg-gradient-to-r from-white via-white to-transparent z-20 pointer-events-none"></div>
       <!-- Right Fade -->
       <div class="absolute right-0 top-0 h-full w-40 bg-gradient-to-l from-white via-white to-transparent z-20 pointer-events-none"></div>
       
       <!-- Row 2: Scrolling Right -->
-      <div class="overflow-hidden">
-        <div class="carousel-row carousel-row-reverse">
-          <TestimonialCard v-for="(card, idx) in cardsRow2Repeated" :key="`r2-${idx}`" :card="card" />
-        </div>
+      <div class="carousel-row carousel-row-reverse">
+        <TestimonialCard v-for="(card, idx) in cardsRow2Repeated" :key="`r2-${idx}`" :card="card" />
       </div>
     </div>
 
@@ -78,13 +74,13 @@
           transform: translateX(0px);
         }
         100% {
-          transform: translateX(calc(-320px * 4 - 1.5rem * 4));
+          transform: translateX(calc(-320px * 4 - 1.5rem * 3));
         }
       }
 
       @keyframes scrollRight {
         0% {
-          transform: translateX(calc(-320px * 4 - 1.5rem * 4));
+          transform: translateX(calc(-320px * 4 - 1.5rem * 3));
         }
         100% {
           transform: translateX(0px);
